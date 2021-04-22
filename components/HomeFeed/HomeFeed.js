@@ -102,7 +102,7 @@ function FullLengthSermon(props = {}) {
               router.push(`/sermon/${getIdSuffix(props.sermon?.id)}`)
             }
           />
-          <Box position="absolute" paddingLeft="250px" paddingTop="165px">
+          <Box position="absolute" paddingLeft="240px" paddingTop="175px">
             <PlayCircle
               size="36"
               color={`${theme.colors.neutrals[100]}`}
