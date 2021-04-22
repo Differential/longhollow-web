@@ -83,32 +83,6 @@ function FullLengthSermon(props = {}) {
         summary={props.sermon?.summary}
         subtitle={clips?.length ? 'HIGHLIGHTS FROM' : ''}
       />
-      <Box
-        display="flex"
-        flexDirection="column"
-        ml={{ _: 'l', md: 'xxl' }}
-        mt={{ _: 'm', lg: '-130px' }}
-        zIndex="2"
-      >
-        <Heading variant="h5" color="neutrals.500">
-          FULL MESSAGE
-        </Heading>
-        <Styled.SermonImage
-          rounded
-          mt="s"
-          src={props.sermon?.coverImage?.sources?.[0]?.uri}
-          onClick={() =>
-            router.push(`/sermon/${getIdSuffix(props.sermon?.id)}`)
-          }
-        />
-        <Box position="absolute" paddingLeft="250px" paddingTop="165px">
-          <PlayCircle
-            size="36"
-            color={`${theme.colors.neutrals[100]}`}
-            opacity="60%"
-          />
-        </Box>
-      </Box>
       {clips?.length ? (
         <Box
           display="flex"
