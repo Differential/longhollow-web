@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 
@@ -36,6 +36,18 @@ function Nav(props = {}) {
 
   const { active, setActive } = props;
 
+  useEffect(() => {
+    function handleRouteChangeStart() {
+      setHoveredItem(null);
+    }
+
+    router.events.on('routeChangeStart', handleRouteChangeStart);
+
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChangeStart);
+    };
+  }, []);
+
   return (
     <Styled.Nav active={active}>
       <ClientSideComponent height="100%" width="100%">
@@ -44,14 +56,13 @@ function Nav(props = {}) {
             const Component = getMenuItem(action.id);
             return (
               <Box
-                key={action.action}
+                key={action.id}
                 // Don't show hover state on mobile
                 onTouchEnd={() => {
                   setHoveredItem(null);
                   setIsMobile(true);
                 }}
                 onMouseEnter={() => {
-                  // TODO: Need to disable this for touch devices
                   if (action.id === hoveredItem || isMobile) {
                     setHoveredItem(null);
                   } else {
@@ -67,7 +78,6 @@ function Nav(props = {}) {
                   selected={action.action === router.pathname}
                   hovered={action.id === hoveredItem}
                   onClick={() => {
-                    setHoveredItem(null);
                     const webAction = action.action?.web;
 
                     if (typeof webAction === 'string') {
@@ -81,7 +91,6 @@ function Nav(props = {}) {
                     }
                   }}
                   onTouchEnd={() => {
-                    setHoveredItem(null);
                     setActive(false);
                     const mobileAction = action.action?.mobile;
 

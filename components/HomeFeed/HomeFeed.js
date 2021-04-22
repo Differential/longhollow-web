@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { ArrowRight, PlayCircle } from 'phosphor-react';
-import { gql, useQuery } from '@apollo/client';
 
 import {
   ArticleLink,
@@ -9,59 +8,16 @@ import {
   LargeImage,
   MainPhotoHeader,
   MarketingHeadline,
-  Quote,
   ConnectTiles,
   VideoPlayer,
   ArticleLinks,
 } from 'components';
 import { Box, CardGrid, Heading, Section, Text, theme } from 'ui-kit';
 import { useRouter } from 'next/router';
-import IDS from 'config/ids';
 import { getIdSuffix } from 'utils';
 import Styled from './HomeFeed.styles';
 import { useCurrentUser } from 'hooks';
 import usePersonaFeed from 'hooks/usePersonaFeed';
-
-const HomeQuote = () => {
-  const { data } = useQuery(gql`
-    {
-      node(id: "ContentChannel:${IDS.STORIES}") {
-        id
-        ... on ContentChannel {
-          childContentItemsConnection {
-            edges {
-              node {
-                id
-                title
-                summary
-                coverImage {
-                  sources {
-                    uri
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  `);
-
-  const quote = data?.node?.childContentItemsConnection?.edges[0]?.node;
-
-  return quote ? (
-    <Quote
-      color="quaternary"
-      alignment="left"
-      title={quote.title}
-      attribution={quote.attribution}
-      actionLabel="Full story"
-      actionLink={`/page/${getIdSuffix(quote.id)}`}
-      text={quote.summary}
-      avatar={quote.coverImage?.sources[0]?.uri}
-    />
-  ) : null;
-};
 
 function FullLengthSermon(props = {}) {
   const router = useRouter();
@@ -72,14 +28,8 @@ function FullLengthSermon(props = {}) {
   return (
     <Box display="flex" flexDirection="column">
       <MainPhotoHeader
-        src={
-          props.sermon?.coverImage?.sources?.[0].uri || '/about/schedule.jpeg'
-        }
-        overlay={{
-          _: 'rgba(0, 0, 0, 0.7)',
-          lg:
-            'linear-gradient(89.49deg, #1c1617 -16.61%, rgba(28, 22, 23, 0) 99.62%)',
-        }}
+        src={props.sermon?.coverImage?.sources?.[0].uri || '/schedule.jpeg'}
+        justifyText="center"
         content={
           <>
             <Box
@@ -104,24 +54,34 @@ function FullLengthSermon(props = {}) {
                   },
                 })}
               >
-                {clips.map(clip =>
-                  clip?.node?.videos?.[0]?.sources?.[0]?.uri ? (
-                    <VideoPlayer
-                      key={clip.node?.id}
-                      src={clip.node?.videos?.[0]?.sources?.[0]?.uri}
-                      title={clip.node?.title}
-                      poster={clip.node?.coverImage?.sources?.[0]?.uri}
-                      style={{ width: '100%' }}
-                    />
-                  ) : null
-                )}
+                {clips?.length
+                  ? clips.map(clip =>
+                      clip?.node?.videos?.[0]?.sources?.[0]?.uri ? (
+                        <VideoPlayer
+                          key={clip.node?.id}
+                          src={clip.node?.videos?.[0]?.sources?.[0]?.uri}
+                          title={clip.node?.title}
+                          poster={clip.node?.coverImage?.sources?.[0]?.uri}
+                          style={{ width: '100%' }}
+                        />
+                      ) : null
+                    )
+                  : [
+                      <VideoPlayer
+                        key={props.sermon?.id}
+                        src={props.sermon?.videos?.[0]?.sources?.[0]?.uri}
+                        title={props.sermon?.title}
+                        poster={props.sermon?.coverImage?.sources?.[0]?.uri}
+                        style={{ width: '100%' }}
+                      />,
+                    ]}
               </Carousel>
             </Box>
           </>
         }
         title={props.sermon?.title}
         summary={props.sermon?.summary}
-        subtitle="HIGHLIGHTS FROM"
+        subtitle={clips?.length ? 'HIGHLIGHTS FROM' : ''}
       />
       <Box
         display="flex"
@@ -133,7 +93,33 @@ function FullLengthSermon(props = {}) {
         <Heading variant="h5" color="neutrals.500">
           FULL MESSAGE
         </Heading>
-        <Box display="flex">
+        <Styled.SermonImage
+          rounded
+          mt="s"
+          src={props.sermon?.coverImage?.sources?.[0]?.uri}
+          onClick={() =>
+            router.push(`/sermon/${getIdSuffix(props.sermon?.id)}`)
+          }
+        />
+        <Box position="absolute" paddingLeft="250px" paddingTop="165px">
+          <PlayCircle
+            size="36"
+            color={`${theme.colors.neutrals[100]}`}
+            opacity="60%"
+          />
+        </Box>
+      </Box>
+      {clips?.length ? (
+        <Box
+          display="flex"
+          flexDirection="column"
+          ml={{ _: 'l', md: 'xxl' }}
+          mt={{ _: 'm', lg: '-130px' }}
+          zIndex="2"
+        >
+          <Heading variant="h5" color="neutrals.500">
+            FULL MESSAGE
+          </Heading>
           <Styled.SermonImage
             rounded
             mt="s"
@@ -150,7 +136,7 @@ function FullLengthSermon(props = {}) {
             />
           </Box>
         </Box>
-      </Box>
+      ) : null}
     </Box>
   );
 }
@@ -192,6 +178,9 @@ function HomeFeedArticles({ articles }) {
 function HomeFeedCTA({ authenticated }) {
   return authenticated && false ? (
     <MarketingHeadline
+      image={{
+        src: '/watch.jpeg',
+      }}
       title={
         <>
           <Heading color="neutrals.900" variant="h2" fontWeight="800">
@@ -214,6 +203,9 @@ function HomeFeedCTA({ authenticated }) {
     />
   ) : (
     <MarketingHeadline
+      image={{
+        src: '/watch.jpeg',
+      }}
       title={
         <>
           <Heading color="neutrals.900" variant="h2" fontWeight="800">
@@ -239,6 +231,8 @@ function HomeFeedCTA({ authenticated }) {
 }
 
 function HomeFeedContent(props = {}) {
+  const router = useRouter();
+
   const largeArticle = props.articles?.[0]?.node;
   const miniArticles = props.articles?.slice(1, 4);
 
@@ -248,10 +242,10 @@ function HomeFeedContent(props = {}) {
           <HomeFeedArticles articles={miniArticles} />,
           <HomeFeedLargeArticle article={largeArticle} />,
         ],
-        [<HomeFeedCTA authenticated={props.authenticated} />, <HomeQuote />],
+        [<HomeFeedCTA authenticated={props.authenticated} />],
       ]
     : [
-        [<HomeFeedCTA authenticated={props.authenticated} />, <HomeQuote />],
+        [<HomeFeedCTA authenticated={props.authenticated} />],
         [
           <HomeFeedLargeArticle article={largeArticle} />,
           <HomeFeedArticles articles={miniArticles} />,
@@ -263,7 +257,7 @@ function HomeFeedContent(props = {}) {
       <Section>
         <CardGrid
           gridColumnGap="l"
-          columns="2"
+          columns={content[0].length}
           breakpoints={[{ breakpoint: 'lg', columns: 1 }]}
           px={{ _: 'l', md: 'xxl' }}
           my={{ _: 'l', md: 'xxl' }}
@@ -275,7 +269,7 @@ function HomeFeedContent(props = {}) {
       <Section>
         <CardGrid
           gridColumnGap="l"
-          columns="2"
+          columns={content[1].length}
           breakpoints={[{ breakpoint: 'lg', columns: 1 }]}
           px={{ _: 'l', md: 'xxl' }}
           my={{ _: 'l', md: 'xxl' }}
@@ -284,18 +278,10 @@ function HomeFeedContent(props = {}) {
           {content[1][1]}
         </CardGrid>
       </Section>
-      <FullWidthCTA pt="171px" pb="77px" justifyContent="flex-start">
-        <Styled.GodLovesYou>
-          <Styled.GodLoves
-            name="godLoves"
-            viewBox="0 0 532 66"
-            stroke="white"
-            fill="white"
-            mr={{ _: 'xs', md: 'm' }}
-          />
-          <Styled.You name="you" viewBox="0 0 200 66" stroke="white" />
-          <Styled.Circle color="white" weight="fill" />
-        </Styled.GodLovesYou>
+      <FullWidthCTA pt="171px" pb="171px" justifyContent="flex-start">
+        <Heading fontSize="66px" color="bg" fontWeight="bold">
+          Take Your Next Step
+        </Heading>
         <Text
           color="white"
           variant="h4"
@@ -306,16 +292,20 @@ function HomeFeedContent(props = {}) {
           mb="s"
           px="m"
         >
-          For God so loved the world, that he gave his only Son, that whoever
-          believes in him should not perish but have eternal life.&nbsp;
+          Starting Point is a fun four-part experience that will introduce you
+          to our church, help you learn more about yourself, and give you
+          practical ways to take the next step on your&nbsp;
           <Text
             color="neutrals.100"
             variant="h4"
             opacity="60%"
             display="inline"
             fontWeight="600"
+            onClick={() =>
+              router.push('/next-steps/876dd1736a5eb8b7cddd6b743609083d')
+            }
           >
-            John 3.16
+            Discipleship Journey
           </Text>
         </Text>
         <Text
@@ -324,10 +314,12 @@ function HomeFeedContent(props = {}) {
           display="flex"
           fontWeight="600"
           alignItems="center"
+          cursor="pointer"
+          onClick={() => router.push('/about/cd0472a4ed38ecb9874c7fc55ee7c173')}
         >
-          The good news&nbsp;
+          Get Started&nbsp;
           <ArrowRight
-            size="18"
+            size="16"
             color={`${theme.colors.neutrals[100]}`}
             opacity="60%"
             weight="bold"
