@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowRight } from 'phosphor-react';
+import { ArrowRight, PlayCircle } from 'phosphor-react';
 import { gql, useQuery } from '@apollo/client';
 
 import {
@@ -72,7 +72,9 @@ function FullLengthSermon(props = {}) {
   return (
     <Box display="flex" flexDirection="column">
       <MainPhotoHeader
-        src={props.sermon?.coverImage?.sources?.[0].uri || "/about/schedule.jpeg"}
+        src={
+          props.sermon?.coverImage?.sources?.[0].uri || '/about/schedule.jpeg'
+        }
         overlay={{
           _: 'rgba(0, 0, 0, 0.7)',
           lg:
@@ -131,14 +133,23 @@ function FullLengthSermon(props = {}) {
         <Heading variant="h5" color="neutrals.500">
           FULL MESSAGE
         </Heading>
-        <Styled.SermonImage
-          rounded
-          mt="s"
-          src={props.sermon?.coverImage?.sources?.[0]?.uri}
-          onClick={() =>
-            router.push(`/sermon/${getIdSuffix(props.sermon?.id)}`)
-          }
-        />
+        <Box display="flex">
+          <Styled.SermonImage
+            rounded
+            mt="s"
+            src={props.sermon?.coverImage?.sources?.[0]?.uri}
+            onClick={() =>
+              router.push(`/sermon/${getIdSuffix(props.sermon?.id)}`)
+            }
+          />
+          <Box position="absolute" paddingLeft="250px" paddingTop="165px">
+            <PlayCircle
+              size="36"
+              color={`${theme.colors.neutrals[100]}`}
+              opacity="60%"
+            />
+          </Box>
+        </Box>
       </Box>
     </Box>
   );
