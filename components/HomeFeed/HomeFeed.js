@@ -94,21 +94,22 @@ function FullLengthSermon(props = {}) {
           <Heading variant="h5" color="neutrals.500">
             FULL MESSAGE
           </Heading>
-          <Styled.SermonImage
-            rounded
-            mt="s"
-            src={props.sermon?.coverImage?.sources?.[0]?.uri}
-            onClick={() =>
-              router.push(`/sermon/${getIdSuffix(props.sermon?.id)}`)
-            }
-          />
-          <Box position="absolute" paddingLeft="240px" paddingTop="175px">
-            <PlayCircle
-              size="36"
-              color={`${theme.colors.neutrals[100]}`}
-              opacity="60%"
+          <Styled.SermonContainer mt="s">
+            <Styled.SermonImage
+              rounded
+              src={props.sermon?.coverImage?.sources?.[0]?.uri}
+              onClick={() =>
+                router.push(`/sermon/${getIdSuffix(props.sermon?.id)}`)
+              }
             />
-          </Box>
+            <Box position="absolute" right="10px" bottom="10px">
+              <PlayCircle
+                size="36"
+                color={`${theme.colors.neutrals[100]}`}
+                opacity="60%"
+              />
+            </Box>
+          </Styled.SermonContainer>
         </Box>
       ) : null}
     </Box>
