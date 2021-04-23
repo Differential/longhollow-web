@@ -84,7 +84,7 @@ export async function getStaticPaths() {
   }));
 
 
-  const paths = items.flat().map(({ channelId, seriesId, itemId }) => console.log({ channelId, seriesId, itemId }) || ({
+  const paths = items.flat().map(({ channelId, seriesId, itemId }) => ({
     params: { channel: getIdSuffix(channelId), series: getIdSuffix(seriesId), item: getIdSuffix(itemId) },
   }));
 
