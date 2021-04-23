@@ -118,8 +118,6 @@ export async function getStaticPaths() {
     },
   })))).flatMap(({ data }) => data.node.childContentItemsConnection?.edges.map(({ node }) => ({ channelId: node.id, seriesId: data.node.id })));
 
-  console.log(channels)
-
   const paths = channels.map(({ channelId, seriesId }) => ({
     params: { channel: getIdSuffix(channelId), series: getIdSuffix(seriesId) },
   }));
