@@ -14,12 +14,12 @@ function TrackPageViewProvider({ children }) {
     const handleRouteChange = () => {
       try {
         if (authState.authenticated){
-          trackPageView({ variables: { 
+          trackPageView({ variables: {
             pageTitle: document.title,
             pageUrl: window.location.toString()
           }})
         }
-      }catch (e) {
+      } catch (e) {
         console.log(e, 'Tracking Page View failed')
       }
     }
@@ -27,7 +27,7 @@ function TrackPageViewProvider({ children }) {
     // Initial Load
     handleRouteChange()
 
-
+    // Page change
     router.events.on('routeChangeComplete', handleRouteChange)
 
     // If the component is unmounted, unsubscribe
