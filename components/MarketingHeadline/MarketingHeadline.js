@@ -32,7 +32,7 @@ function MarketingHeadline({
     <Box
       display="flex"
       width="100%"
-      justifyContent={justify === 'right' ? 'flex-end' : 'flex-start'}
+      justifyContent={{ _: 'center', lg: justify === 'right' ? 'flex-end' : 'flex-start'}}
       flexWrap="wrap"
       mt="s"
     >
@@ -42,8 +42,8 @@ function MarketingHeadline({
           color={color}
           variant={variant}
           onClick={onClick}
-          mr={justify === 'left' && 's'}
-          ml={justify === 'right' && 's'}
+          mr={{ _: 's', lg: justify === 'left' && 's'}}
+          ml={{ _: 's', lg: justify === 'right' && 's'}}
         >
           {label}
         </StyledButton>
@@ -67,7 +67,7 @@ function MarketingHeadline({
       <Box
         display="flex"
         flexDirection="column"
-        alignItems={justify === 'left' ? 'flex-start' : 'flex-end'}
+        alignItems={{ _: 'center', lg: justify === 'right' ? 'flex-end' : 'flex-start' }}
         textAlign={justify}
         flex="1 0 50%"
         px={{ _: 0, lg: 's' }}
@@ -102,6 +102,7 @@ function MarketingHeadline({
             width={sideContent ? '85%' : '66%'}
             whiteSpace="pre"
             mt="xs"
+            textAlign={{ _: 'center', lg: 'left' }}
           >
             {splitString(description)}
           </Text>
