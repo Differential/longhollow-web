@@ -20,7 +20,6 @@ export default function Page({ data } = {}) {
       <MainPhotoHeader
         src={data.coverImage?.sources?.[0].uri || ''}
         width="auto"
-        backdrop
         overlay=""
       />
       <Section px={{ _: 'l', lg: 'xxl' }} my={{ _: 'l', lg: 'xxl' }}>
@@ -45,17 +44,6 @@ export default function Page({ data } = {}) {
               textTransform="uppercase"
             >
               {data.title}
-            </Heading>
-          )}
-          {data.summary && (
-            <Heading
-              fontSize="h3"
-              lineHeight="h3"
-              color="fg"
-              fontWeight="700"
-              mt="m"
-            >
-              {data.summary}
             </Heading>
           )}
         </Box>

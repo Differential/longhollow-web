@@ -44,6 +44,7 @@ function MarketingHeadline({
           onClick={onClick}
           mr={{ _: 's', lg: justify === 'left' && 's'}}
           ml={{ _: 's', lg: justify === 'right' && 's'}}
+          mt={{ _: 's', 'lg': 0 }}
         >
           {label}
         </StyledButton>
