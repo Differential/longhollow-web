@@ -23,15 +23,14 @@ export default function Watch({ series, watchPages, sermons }) {
 
   const sermon = sermons?.[0]?.node;
 
-  const { liveStreams } = useLiveStreams();
-  const isLive = liveStreams.length && liveStreams[0].isLive;
+  const { liveStreams, prettyCountdown } = useLiveStreams();
 
   return (
     <Layout title="Watch">
       <MainPhotoHeader
         src={sermon?.coverImage?.sources?.[0]?.uri}
         title="Join us live"
-        subtitle="UPCOMING"
+        subtitle={prettyCountdown}
         justifyText="center"
         backdrop={false}
       />
