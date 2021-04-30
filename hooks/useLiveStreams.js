@@ -21,14 +21,17 @@ export const GET_LIVE_STREAMS = gql`
 function useLiveStreams(options = {}) {
   const query = useQuery(GET_LIVE_STREAMS, options);
   const firstStream = query?.data?.liveStreams?.[0];
+  let prettyCountdown;
+  if (firstStream?.isLive) prettyCountdown = '• LIVE NOW';
+  else if (!firstStream?.eventStartTime) prettyCountdown = 'NOT LIVE';
+  else
+    prettyCountdown = `• LIVE ${formatDistanceToNow(
+      new Date(firstStream?.eventStartTime),
+      { addSuffix: true }
+    ).toUpperCase()}`;
 
   return {
-    prettyCountdown: firstStream?.isLive
-      ? '• LIVE NOW'
-      : `• LIVE IN ${formatDistanceToNow(
-          new Date(firstStream?.eventStartTime),
-          { addSuffix: true }
-        ).toUpperCase()}`,
+    prettyCountdown,
     liveStreams: query?.data?.liveStreams || [],
     ...query,
   };
