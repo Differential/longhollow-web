@@ -23,7 +23,7 @@ export default function Watch({ series, watchPages, sermons }) {
 
   const sermon = sermons?.[0]?.node;
 
-  const { liveStreams, prettyCountdown } = useLiveStreams();
+  const { prettyCountdown } = useLiveStreams();
 
   return (
     <Layout title="Watch">
