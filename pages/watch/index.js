@@ -9,12 +9,34 @@ import {
 import { initializeApollo } from 'lib/apolloClient';
 import { useRouter } from 'next/router';
 import IDS from 'config/ids';
-import { Box, CardGrid, Heading, Section, theme } from 'ui-kit';
+import { Box, Image, system, CardGrid, Heading, Section, theme } from 'ui-kit';
 import { GET_MESSAGE_SERIES } from 'hooks/useMessageSeries';
 import { GET_CONTENT_CHANNEL } from 'hooks/useContentChannel';
 import { getChannelId, getIdSuffix } from 'utils';
 import useLiveStreams from 'hooks/useLiveStreams';
-import Styled from './index.styles';
+import styled from 'styled-components';
+import { themeGet } from '@styled-system/theme-get';
+
+const Styled = {};
+
+Styled.SermonContainer = styled(Box)`
+  cursor: pointer;
+  position: relative;
+
+  @media screen and (min-width: ${themeGet('breakpoints.lg')}) {
+    width: 300px;
+  }
+`;
+
+Styled.SermonImage = styled(Image)`
+  width: 100%;
+
+  @media screen and (min-width: ${themeGet('breakpoints.lg')}) {
+    height: 200px;
+  }
+
+  ${system}
+`;
 
 export default function Watch({ series, watchPages, sermons }) {
   const router = useRouter();
