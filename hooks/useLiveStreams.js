@@ -23,7 +23,7 @@ function useLiveStreams(options = {}) {
   const firstStream = query?.data?.liveStreams?.[0];
   let prettyCountdown;
   if (firstStream?.isLive) prettyCountdown = '• LIVE NOW';
-  else if (!firstStream?.eventStartTime) prettyCountdown = 'NOT LIVE';
+  else if (!firstStream?.eventStartTime) prettyCountdown = '';
   else
     prettyCountdown = `• LIVE ${formatDistanceToNow(
       new Date(firstStream?.eventStartTime),
