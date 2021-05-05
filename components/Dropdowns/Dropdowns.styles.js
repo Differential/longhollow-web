@@ -30,11 +30,14 @@ export const Input = styled.input`
 
 export const Button = styled(_Button)`
   align-items: center;
-  border-radius: ${themeGet('radii.xl')};
   display: flex;
   height: 40px;
-  justify-content: center;
+  justify-content: flex-start;
   margin-bottom: ${themeGet('space.xxs')};
+  background-color: transparent;
+  color: ${themeGet('colors.fg')};
+  border: 0;
+  font-weight: bold;
 
   ${system}
 `;
