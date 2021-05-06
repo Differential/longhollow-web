@@ -13,7 +13,14 @@ function Profile() {
   const dispatch = useAuthDispatch();
   const { currentPerson } = useCurrentPerson();
   return (
-    <Box display="flex" flexDirection="column" alignItems="flex-start" width="100%" borderTop="1px solid grey">
+    <Box
+      display="flex"
+      flexDirection="column"
+      alignItems="flex-start"
+      width="100%"
+      borderTop="1px solid grey"
+      pt="xxs"
+    >
       <Heading width="100%" p="0.875rem">
         {[
           currentPerson.profile?.firstName,
@@ -21,15 +28,19 @@ function Profile() {
         ].join(' ')}
       </Heading>
       <Button
+        borderRadius="base"
         width="100%"
-        mb="s"
         onClick={() => {
           router.push('/profile');
         }}
       >
         Profile
       </Button>
-      <Button width="100%" mb="s" onClick={() => dispatch(logout())}>
+      <Button
+        borderRadius="base"
+        width="100%"
+        onClick={() => dispatch(logout())}
+      >
         Log Out
       </Button>
     </Box>
@@ -40,8 +51,19 @@ function Login() {
   const modalDispatch = useModalDispatch();
 
   return (
-    <Box display="flex" flexDirection="column" alignItems="flex-start" width="100%" borderTop="1px solid grey">
-      <Button mb="s" onClick={() => modalDispatch(showModal('Auth'))}>
+    <Box
+      display="flex"
+      flexDirection="column"
+      alignItems="flex-start"
+      width="100%"
+      borderTop="1px solid grey"
+      pt="xxs"
+    >
+      <Button
+        borderRadius="base"
+        width="100%"
+        onClick={() => modalDispatch(showModal('Auth'))}
+      >
         Sign In
       </Button>
     </Box>
@@ -90,7 +112,7 @@ export default function DropdownUser() {
       >
         Serve
       </Button>
-      {authenticated ? <Profile /> : <Login />}      
+      {authenticated ? <Profile /> : <Login />}
     </Box>
   );
 }
