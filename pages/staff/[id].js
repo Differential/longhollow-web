@@ -11,17 +11,27 @@ const ProfileImage = styled(Image)`
   border-radius: ${themeGet('radii.image')};
 `;
 
-export default function Page({ data }) {
-
+export default function Page({ data, dropdownData }) {
   return (
-    <Layout meta={getMetaData(data)} bg="bg_alt">
+    <Layout meta={getMetaData(data)} bg="bg_alt" dropdownData={dropdownData}>
       <Section>
-        <Box display={{md: 'block', lg: "flex"}} mt={{_: 'l'}} alignItems="column">
+        <Box
+          display={{ md: 'block', lg: 'flex' }}
+          mt={{ _: 'l' }}
+          alignItems="column"
+        >
           <Box flex="1" display="flex" justifyContent="center">
-            <ProfileImage src={data?.photo?.uri} /> 
+            <ProfileImage src={data?.photo?.uri} />
           </Box>
-          <Box flex="1" pt="xl" pb="m" display="flex" flexDirection="column" alignItems={{ _: "center", lg: 'flex-start'}}>
-            {(data.campus?.name) && (
+          <Box
+            flex="1"
+            pt="xl"
+            pb="m"
+            display="flex"
+            flexDirection="column"
+            alignItems={{ _: 'center', lg: 'flex-start' }}
+          >
+            {data.campus?.name && (
               <Heading
                 fontSize="h2"
                 lineHeight="h2"

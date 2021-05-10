@@ -18,13 +18,14 @@ export function SearchPageContent({ filtering, setFiltering }) {
   );
 }
 
-export default function SearchPage() {
+export default function SearchPage({ dropdownData }) {
   const [filtering, setFiltering] = useState(false);
   return (
     <Layout
       title="Search"
       overflowY={filtering ? { _: 'hidden', lg: 'auto' } : 'auto'}
       height={filtering ? { _: '100vh', lg: '100%' } : '100%'}
+      dropdownData={dropdownData}
     >
       <SearchPageContent filtering={filtering} setFiltering={setFiltering} />
     </Layout>

@@ -16,6 +16,7 @@ import { getChannelId, getIdSuffix } from 'utils';
 import useLiveStreams from 'hooks/useLiveStreams';
 import styled from 'styled-components';
 import { themeGet } from '@styled-system/theme-get';
+import getDropdownData from 'utils/getDropdownData';
 
 const Styled = {};
 
@@ -40,7 +41,7 @@ Styled.SermonImage = styled(Image)`
   ${system}
 `;
 
-export default function Watch({ series, watchPages, sermons }) {
+export default function Watch({ series, watchPages, sermons, dropdownData }) {
   const router = useRouter();
 
   const sermon = sermons?.[0]?.node;
@@ -49,7 +50,7 @@ export default function Watch({ series, watchPages, sermons }) {
   const live = liveStreams?.[0]?.isLive;
 
   return (
-    <Layout title="Watch">
+    <Layout dropdownData={dropdownData}>
       <MainPhotoHeader
         src={sermon?.coverImage?.sources?.[0]?.uri}
         title="Join us live"
@@ -59,7 +60,13 @@ export default function Watch({ series, watchPages, sermons }) {
         primaryButton={
           <a
             className="btn"
-            style={{ pointerEvents: 'auto', marginRight: '16px', zIndex: 100, width: 'auto', padding: '14px 28px' }}
+            style={{
+              pointerEvents: 'auto',
+              marginRight: '16px',
+              zIndex: 100,
+              width: 'auto',
+              padding: '14px 28px',
+            }}
             href={
               live
                 ? liveStreams[0].webViewUrl
@@ -72,7 +79,11 @@ export default function Watch({ series, watchPages, sermons }) {
         secondaryButton={
           <a
             className="btn"
-            style={{width: 'auto', pointerEvents: 'auto', padding: '14px 28px' }}
+            style={{
+              width: 'auto',
+              pointerEvents: 'auto',
+              padding: '14px 28px',
+            }}
             href="/next-steps/3644e32503017b6f2f19edfdff0eb28a"
           >
             {live ? 'Other ways to watch' : 'How to watch'}
@@ -85,7 +96,7 @@ export default function Watch({ series, watchPages, sermons }) {
         mt={{ _: 'm', lg: '-130px' }}
         zIndex="2"
       >
-        <Heading variant="h5" color={{_: 'fg', lg: "white"}} opacity="80%">
+        <Heading variant="h5" color={{ _: 'fg', lg: 'white' }} opacity="80%">
           LAST WEEK
         </Heading>
         <Styled.SermonContainer mt="s">
