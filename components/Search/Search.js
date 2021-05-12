@@ -4,9 +4,6 @@ import {
   InstantSearch,
   Hits,
   Pagination,
-  ClearRefinements,
-  RefinementList,
-  Configure,
   Panel,
 } from 'react-instantsearch-dom';
 import { useRouter } from 'next/router';
@@ -22,34 +19,92 @@ const searchClient = algoliasearch(
   '7938b74cef1ef3dd0722fe36e418d2c7'
 );
 
+const DEBOUNCE_TIME = 600;
+
+const createURL = state => {
+  const queryParts = [];
+
+  if (state?.refinementList) {
+    Object.keys(state.refinementList).forEach(key => {
+      if (state.refinementList[key]) {
+        queryParts.push(`${key}=${state.refinementList[key]}`);
+      }
+    });
+  }
+
+  if (state?.query) {
+    queryParts.push(`q=${state.query}`);
+  }
+
+  return queryParts.length ? `?${queryParts.join('&')}` : '';
+};
+
+const searchStateToUrl = searchState => `/search${createURL(searchState)}`;
+
+const urlToSearchState = router => {
+  const { q: query, ...refinements } = router.query;
+  const refinementList = {};
+  if (refinements) {
+    Object.keys(refinements).forEach(refinement => {
+      refinementList[refinement] =
+        refinements[refinement]?.split(',')?.filter(r => Boolean(r)) || [];
+    });
+  }
+
+  return {
+    query,
+    refinementList,
+  };
+};
+
 function Search({ filtering, setFiltering }) {
-  const [categories, setCategories] = useState([]);
   const router = useRouter();
+  const [searchState, setSearchState] = useState(urlToSearchState(router));
+
+  // router.query may not have query params on initial render
+  useEffect(() => {
+    setSearchState(urlToSearchState(router));
+  }, [router]);
 
   useEffect(() => {
-    if (!categories.length && filtering) {
+    if (!searchState.refinementList?.category?.length && filtering) {
       setFiltering(false);
     }
-  }, [categories, filtering, setFiltering]);
+  }, [searchState.refinementList?.category, filtering, setFiltering]);
+
+  const [debouncedSetState, setDebouncedSetState] = useState(null);
+
+  const onSearchStateChange = updatedSearchState => {
+    clearTimeout(debouncedSetState);
+
+    setDebouncedSetState(
+      setTimeout(() => {
+        router.replace(
+          searchStateToUrl(updatedSearchState),
+          searchStateToUrl(updatedSearchState),
+          { shallow: true }
+        );
+      }, DEBOUNCE_TIME)
+    );
+
+    setSearchState(updatedSearchState);
+  };
 
   return (
     <div className="ais-InstantSearch">
       <InstantSearch
         indexName="prod_ContentItem"
         searchClient={searchClient}
-        onSearchStateChange={state => {
-          setCategories(state.refinementList?.category || []);
-          router.replace({
-            query: { categories: state.refinementList?.category },
-          });
-        }}
+        searchState={searchState}
+        onSearchStateChange={onSearchStateChange}
+        createURL={createURL}
       >
         <div className={`search-container ${filtering ? 'filtering' : ''}`}>
-          <SearchBox />
+          <SearchBox onSearchStateChange={onSearchStateChange} />
           <Panel header="Category" className="categories">
             <CategoriesList
               attribute="category"
-              defaultRefinement={router.query.categories}
+              defaultRefinement={searchState.refinementList?.category}
             />
           </Panel>
         </div>
@@ -58,14 +113,17 @@ function Search({ filtering, setFiltering }) {
           flexDirection={{ _: 'column', lg: 'row' }}
           position="relative"
         >
-          <RefinementsList categories={categories} filtering={filtering} />
+          <RefinementsList
+            categories={searchState.refinementList?.category || []}
+            filtering={filtering}
+          />
           <div className={`right-panel ${filtering ? 'filtering' : ''}`}>
             <Hits hitComponent={Hit} />
             <Pagination />
           </div>
         </Box>
       </InstantSearch>
-      {categories?.length ? (
+      {searchState.refinementList?.category?.length ? (
         <Styled.FilterButton>
           <Button color="primary" onClick={() => setFiltering(!filtering)}>
             <Heading fontSize="h4">{filtering ? 'Close' : 'Filter'}</Heading>

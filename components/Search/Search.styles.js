@@ -18,7 +18,7 @@ Styled.FilterButton = styled(Box)`
   }
 `;
 
-Styled.SearchForm = styled.form`
+Styled.SearchContainer = styled.div`
   max-width: ${themeGet('breakpoints.md')};
   position: relative;
   width: 100%;

@@ -1,43 +1,34 @@
 import { MagnifyingGlass } from 'phosphor-react';
-import {
-  connectCurrentRefinements,
-  connectSearchBox,
-} from 'react-instantsearch-dom';
+import { connectSearchBox } from 'react-instantsearch-dom';
 import { useTheme } from 'styled-components';
 import Styled from './Search.styles';
 
-const SearchBox = ({ currentRefinement, isSearchStalled, refine, items }) => {
+const SearchBox = ({ onSearchStateChange, currentRefinement, refine }) => {
   const theme = useTheme();
   return (
-    <Styled.SearchForm noValidate action="" role="search">
+    <Styled.SearchContainer>
       <Styled.SearchBox
         type="search"
         placeholder="Search"
         value={currentRefinement}
-        onChange={event => refine(event.currentTarget.value)}
+        onChange={event => {
+          refine(event.currentTarget.value);
+        }}
       />
       <Styled.SearchIcon>
         <MagnifyingGlass color={theme.colors.fg} size="32" />
       </Styled.SearchIcon>
-      <Styled.ClearButtonContainer
-        onClick={() => {
-          refine('');
-        }}
-      >
-        <ConnectedClearAllRefinements />
+      <Styled.ClearButtonContainer>
+        <Styled.ClearButton
+          onClick={() => {
+            onSearchStateChange({});
+          }}
+        >
+          Clear
+        </Styled.ClearButton>
       </Styled.ClearButtonContainer>
-    </Styled.SearchForm>
+    </Styled.SearchContainer>
   );
 };
-
-const ClearRefinements = ({ refine, items }) => {
-  return (
-    <Styled.ClearButton onClick={() => refine([])}>Clear</Styled.ClearButton>
-  );
-};
-
-const ConnectedClearAllRefinements = connectCurrentRefinements(
-  ClearRefinements
-);
 
 export default connectSearchBox(SearchBox);
