@@ -11,6 +11,7 @@ import getMetaData from './getMetaData';
 import getURLFromType from './getURLFromType';
 import noop from './noop';
 import normalizeUserData from './normalizeUserData';
+import parseItemId from './parseItemId';
 import splitString from './splitString';
 import slugify from './slugify';
 import textTrimmer from './textTrimmer';
@@ -31,6 +32,7 @@ export {
   getURLFromType,
   noop,
   normalizeUserData,
+  parseItemId,
   splitString,
   slugify,
   textTrimmer,
