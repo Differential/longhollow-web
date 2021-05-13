@@ -47,7 +47,10 @@ const createURL = state => {
 const searchStateToUrl = searchState => `/search${createURL(searchState)}`;
 
 const urlToSearchState = path => {
-  const queryParams = new URLSearchParams(`?${path?.split('?')?.[1]}`);
+  const searchString = path?.split('?')?.[1];
+  if (!searchString) return {};
+
+  const queryParams = new URLSearchParams(`?${searchString}`);
   let query;
   let page;
   const refinementList = {};
