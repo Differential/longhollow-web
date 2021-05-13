@@ -6,6 +6,7 @@ import {
   Pagination,
   Panel,
 } from 'react-instantsearch-dom';
+import { isEqual } from 'lodash';
 import { useRouter } from 'next/router';
 import Styled from './Search.styles';
 import { Box, Button, Heading } from 'ui-kit';
@@ -19,7 +20,7 @@ const searchClient = algoliasearch(
   '7938b74cef1ef3dd0722fe36e418d2c7'
 );
 
-const DEBOUNCE_TIME = 600;
+const DEBOUNCE_TIME = 1000;
 
 const createURL = state => {
   const queryParts = [];
@@ -36,23 +37,37 @@ const createURL = state => {
     queryParts.push(`q=${state.query}`);
   }
 
+  if (state?.page) {
+    queryParts.push(`p=${state.page}`);
+  }
+
   return queryParts.length ? `?${queryParts.join('&')}` : '';
 };
 
 const searchStateToUrl = searchState => `/search${createURL(searchState)}`;
 
 const urlToSearchState = router => {
-  const { q: query, ...refinements } = router.query;
+  const queryParams = new URLSearchParams(`?${router.asPath?.split('?')?.[1]}`);
+  let query;
+  let page;
   const refinementList = {};
-  if (refinements) {
-    Object.keys(refinements).forEach(refinement => {
-      refinementList[refinement] =
-        refinements[refinement]?.split(',')?.filter(r => Boolean(r)) || [];
-    });
-  }
+  queryParams.forEach((value, key) => {
+    switch (key) {
+      case 'q':
+        query = value;
+        break;
+      case 'p':
+        page = value;
+        break;
+      default:
+        refinementList[key] = value?.split(',')?.filter(r => Boolean(r)) || [];
+        break;
+    }
+  });
 
   return {
     query,
+    page,
     refinementList,
   };
 };
@@ -60,11 +75,7 @@ const urlToSearchState = router => {
 function Search({ filtering, setFiltering }) {
   const router = useRouter();
   const [searchState, setSearchState] = useState(urlToSearchState(router));
-
-  // router.query may not have query params on initial render
-  useEffect(() => {
-    setSearchState(urlToSearchState(router));
-  }, [router]);
+  const [debouncedSetState, setDebouncedSetState] = useState(null);
 
   useEffect(() => {
     if (!searchState.refinementList?.category?.length && filtering) {
@@ -72,23 +83,25 @@ function Search({ filtering, setFiltering }) {
     }
   }, [searchState.refinementList?.category, filtering, setFiltering]);
 
-  const [debouncedSetState, setDebouncedSetState] = useState(null);
-
   const onSearchStateChange = updatedSearchState => {
-    clearTimeout(debouncedSetState);
+    if (!isEqual(updatedSearchState, searchState)) {
+      clearTimeout(debouncedSetState);
 
-    setDebouncedSetState(
-      setTimeout(() => {
-        router.replace(
-          searchStateToUrl(updatedSearchState),
-          searchStateToUrl(updatedSearchState),
-          { shallow: true }
-        );
-      }, DEBOUNCE_TIME)
-    );
+      setDebouncedSetState(
+        setTimeout(() => {
+          router.replace(
+            searchStateToUrl(updatedSearchState),
+            searchStateToUrl(updatedSearchState),
+            { shallow: true }
+          );
+        }, DEBOUNCE_TIME)
+      );
 
-    setSearchState(updatedSearchState);
+      setSearchState(updatedSearchState);
+    }
   };
+
+  const selectedCategories = searchState.refinementList?.category || [];
 
   return (
     <div className="ais-InstantSearch">
@@ -104,7 +117,7 @@ function Search({ filtering, setFiltering }) {
           <Panel header="Category" className="categories">
             <CategoriesList
               attribute="category"
-              defaultRefinement={searchState.refinementList?.category}
+              defaultRefinement={selectedCategories}
             />
           </Panel>
         </div>
@@ -113,17 +126,19 @@ function Search({ filtering, setFiltering }) {
           flexDirection={{ _: 'column', lg: 'row' }}
           position="relative"
         >
-          <RefinementsList
-            categories={searchState.refinementList?.category || []}
-            filtering={filtering}
-          />
+          {selectedCategories?.length ? (
+            <RefinementsList
+              categories={selectedCategories || []}
+              filtering={filtering}
+            />
+          ) : null}
           <div className={`right-panel ${filtering ? 'filtering' : ''}`}>
             <Hits hitComponent={Hit} />
             <Pagination />
           </div>
         </Box>
       </InstantSearch>
-      {searchState.refinementList?.category?.length ? (
+      {selectedCategories?.length ? (
         <Styled.FilterButton>
           <Button color="primary" onClick={() => setFiltering(!filtering)}>
             <Heading fontSize="h4">{filtering ? 'Close' : 'Filter'}</Heading>
