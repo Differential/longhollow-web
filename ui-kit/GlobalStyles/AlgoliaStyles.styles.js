@@ -158,32 +158,6 @@ export default css`
     list-style-type: none;
   }
 
-  .ais-Hits-item {
-    border-radius: 10px;
-    box-shadow: ${themeGet('shadows.xl')};
-    margin: ${themeGet('space.s')};
-    margin-top: 0;
-    width: 250px;
-  }
-
-  .ais-Hits-item > div {
-    height: 100%;
-    padding: ${themeGet('space.s')};
-  }
-
-  .ais-Hits-item > div > img {
-    border-radius: ${themeGet('radii.base')};
-  }
-
-  .ais-Hits-item .hit-name {
-    font-weight: ${themeGet('fontWeights.bold')};
-    margin-top: ${themeGet('space.xs')};
-  }
-
-  .ais-Hits-item .hit-description {
-    margin-top: ${themeGet('space.xs')};
-  }
-
   .ais-Highlight-highlighted {
     font-style: normal;
   }

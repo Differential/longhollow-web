@@ -46,8 +46,8 @@ const createURL = state => {
 
 const searchStateToUrl = searchState => `/search${createURL(searchState)}`;
 
-const urlToSearchState = router => {
-  const queryParams = new URLSearchParams(`?${router.asPath?.split('?')?.[1]}`);
+const urlToSearchState = path => {
+  const queryParams = new URLSearchParams(`?${path?.split('?')?.[1]}`);
   let query;
   let page;
   const refinementList = {};
@@ -74,7 +74,9 @@ const urlToSearchState = router => {
 
 function Search({ filtering, setFiltering }) {
   const router = useRouter();
-  const [searchState, setSearchState] = useState(urlToSearchState(router));
+  const [searchState, setSearchState] = useState(
+    urlToSearchState(router.asPath)
+  );
   const [debouncedSetState, setDebouncedSetState] = useState(null);
 
   useEffect(() => {
@@ -83,17 +85,17 @@ function Search({ filtering, setFiltering }) {
     }
   }, [searchState.refinementList?.category, filtering, setFiltering]);
 
+  // Something is causing this function (and then multiple rerenders)
+  // if a refinement is selected and then all categories are deselected
   const onSearchStateChange = updatedSearchState => {
     if (!isEqual(updatedSearchState, searchState)) {
       clearTimeout(debouncedSetState);
 
+      const updatedUrl = searchStateToUrl(updatedSearchState);
+
       setDebouncedSetState(
         setTimeout(() => {
-          router.replace(
-            searchStateToUrl(updatedSearchState),
-            searchStateToUrl(updatedSearchState),
-            { shallow: true }
-          );
+          router.replace(updatedUrl, updatedUrl, { shallow: true });
         }, DEBOUNCE_TIME)
       );
 

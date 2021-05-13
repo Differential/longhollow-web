@@ -118,6 +118,7 @@ Styled.RefinementsBackground = styled(Box)`
   z-index: 1;
 
   @media screen and (min-width: ${themeGet('breakpoints.md')}) {
+    background: unset;
     display: block !important;
     margin-right: 0 !important;
     position: initial !important;
@@ -146,11 +147,11 @@ Styled.RefinementsBackground = styled(Box)`
 
 Styled.Refinements = styled(Box)`
   background: ${themeGet('colors.gray')}50;
-  height: 100%;
   left: 0;
   overflow-x: hidden;
 
   @media screen and (min-width: ${themeGet('breakpoints.md')}) {
+    background: unset;
     flex-wrap: wrap;
     justify-content: center;
     display: flex !important;
