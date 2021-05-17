@@ -13,6 +13,7 @@ import { initializeApollo } from 'lib/apolloClient';
 import { CardGrid, Longform, Section } from 'ui-kit';
 import { GET_CONTENT_CHANNEL } from 'hooks/useContentChannel';
 import { GET_CAMPUSES } from 'hooks/useCampuses';
+import { GET_CONTENT_BY_SLUG } from 'hooks/useContentBySlug';
 
 export default function Page({ data = {}, campuses }) {
   const router = useRouter();
@@ -70,6 +71,7 @@ export default function Page({ data = {}, campuses }) {
                               label: node.linkText,
                               onClick: () => {
                                 router.push(
+                                  // TODO - use slug here
                                   node.linkURL ||
                                     `/page/${getIdSuffix(node.id)}`
                                 );
@@ -120,9 +122,9 @@ export async function getStaticProps(context) {
   const apolloClient = initializeApollo();
 
   const pageResponse = await apolloClient.query({
-    query: GET_CONTENT_ITEM,
+    query: GET_CONTENT_BY_SLUG,
     variables: {
-      itemId: getItemId(context.params.page),
+      slug: context.params.page,
     },
   });
 
@@ -140,7 +142,7 @@ export async function getStaticProps(context) {
   return {
     props: {
       initialApolloState: apolloClient.cache.extract(),
-      data: pageResponse?.data?.node,
+      data: pageResponse?.data?.getContentBySlug,
       submenuLinks:
         submenuLinks?.data?.node?.childContentItemsConnection?.edges,
       campuses: campusesResponse?.data?.campuses || [],
@@ -165,6 +167,7 @@ export async function getStaticPaths() {
 
   // Get the paths we want to pre-render
   const paths = aboutPages.map(({ id }) => ({
+    // TODO - use slug
     params: { page: getIdSuffix(id) },
   }));
 

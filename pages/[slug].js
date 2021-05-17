@@ -5,12 +5,15 @@ import {
   UniversalContentItem,
   WeekendContentItem,
   ContentSeriesContentItem,
+  ContentChannel,
 } from 'components/SinglePages';
 
 export default function Page({ data, type }) {
   switch (type) {
     case 'UniversalContentItem':
       return <UniversalContentItem data={data} />;
+    case 'ContentChannel':
+      return <ContentChannel series={data} />;
     case 'ContentSeriesContentItem':
       return <ContentSeriesContentItem item={data} />;
     case 'WeekendContentItem':

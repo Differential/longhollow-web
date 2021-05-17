@@ -72,6 +72,7 @@ export default function PageDropdown({
                             dropShadow={false}
                             onClick={() =>
                               router.push(
+                                // TODO - use slug here
                                 `${baseRoute}/${getIdSuffix(item.id)}`
                               )
                             }
@@ -89,6 +90,7 @@ export default function PageDropdown({
                 <Dropdowns.NonFeaturedItem
                   key={i}
                   onClick={() =>
+                    // TODO - use slug here
                     router.push(`${baseRoute}/${getIdSuffix(item.id)}`)
                   }
                 >

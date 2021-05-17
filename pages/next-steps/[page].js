@@ -15,11 +15,12 @@ import { CardGrid, Longform, Section } from 'ui-kit';
 import { getIdSuffix, getItemId, getMetaData } from 'utils';
 import { initializeApollo } from 'lib/apolloClient';
 import { GET_CAMPUSES } from 'hooks/useCampuses';
+import { GET_CONTENT_BY_SLUG } from 'hooks/useContentBySlug';
 
 export default function Page({ data = {}, campuses }) {
   const router = useRouter();
 
-  const { loading, error, node = {} } = data;
+  const { loading, error, getContentBySlug: node = {} } = data;
 
   if (loading || router.isFallback) {
     return null;
@@ -93,6 +94,7 @@ export default function Page({ data = {}, campuses }) {
                     title={node.title}
                     description={node.summary}
                     urlText={node.linkText}
+                    // TODO - use slug here
                     url={node.linkURL || `/page/${getIdSuffix(node.id)}`}
                   />
                 ))}
@@ -109,9 +111,9 @@ export async function getStaticProps(context) {
   const apolloClient = initializeApollo();
 
   const pageResponse = await apolloClient.query({
-    query: GET_CONTENT_ITEM,
+    query: GET_CONTENT_BY_SLUG,
     variables: {
-      itemId: getItemId(context.params.page),
+      slug: context.params.page,
     },
     skip: !context.params.page,
   });
@@ -146,6 +148,7 @@ export async function getStaticPaths() {
 
   // Get the paths we want to pre-render
   const paths = nextStepsPages.map(({ id }) => ({
+    // TODO - use slug
     params: { page: getIdSuffix(id) },
   }));
 

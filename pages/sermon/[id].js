@@ -102,6 +102,7 @@ export async function getStaticPaths() {
       const series = await apolloClient.query({
         query: GET_MESSAGE_CHANNEL,
         variables: {
+          // TODO - use slug here?
           itemId: getUniversalItemId(getIdSuffix(channelId)),
         },
       });
@@ -111,6 +112,7 @@ export async function getStaticPaths() {
     })
   );
 
+  // TODO - use slug here?
   const paths = items.flat().map(({ itemId }) => ({
     params: {
       id: getIdSuffix(itemId),

@@ -4,7 +4,7 @@ export const CONTENT_SERIES_CONTENT_ITEM_FRAGMENT = gql`
   fragment ContentSeriesContentItemFragment on ContentSeriesContentItem {
     id
     title
-    childContentItemsConnection {
+    childContentItemsConnection(orderBy: { field: DATE, direction: DESC }) {
       edges {
         node {
           id

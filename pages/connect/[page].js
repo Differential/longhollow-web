@@ -24,6 +24,7 @@ import { useTheme } from 'styled-components';
 import { GET_STAFF } from 'hooks/useStaff';
 import { GET_MINISTRY_CONTENT } from 'hooks/useMinistryContent';
 import { GET_CAMPUSES } from 'hooks/useCampuses';
+import { GET_CONTENT_BY_SLUG } from 'hooks/useContentBySlug';
 
 export default function Page({
   data = {},
@@ -34,7 +35,7 @@ export default function Page({
   const router = useRouter();
   const theme = useTheme();
 
-  const { loading, error, node } = data;
+  const { loading, error, getContentBySlug: node } = data;
 
   if (loading || router.isFallback) {
     return null;
@@ -57,6 +58,7 @@ export default function Page({
     ? relatedContent.getMinistryContent.slice(0, 4)
     : [];
 
+  // TODO - use slug here
   links = links.filter(link => getIdSuffix(link.id) !== router.query.page);
 
   return (
@@ -92,6 +94,7 @@ export default function Page({
                 title={link.title}
                 description={link.subtitle}
                 imageSrc={link.coverImage?.sources?.[0]?.uri}
+                // TODO - use slug here
                 onClick={() => router.push(`/page/${getIdSuffix(link.id)}`)}
               />
             ))}
@@ -117,6 +120,7 @@ export default function Page({
                     title={node.title}
                     description={node.summary}
                     urlText={node.linkText}
+                    // TODO - use slug here
                     url={node.linkURL || `/page/${getIdSuffix(node.id)}`}
                   />
                 ))}
@@ -228,19 +232,21 @@ export async function getStaticProps({ params }) {
   const apolloClient = initializeApollo();
 
   const pageResponse = await apolloClient.query({
-    query: GET_CONTENT_ITEM,
+    query: GET_CONTENT_BY_SLUG,
     variables: {
-      itemId: getItemId(params.page),
+      slug: params.page,
     },
     skip: !params.page,
   });
 
+  const pageData = pageResponse?.data?.getContentBySlug;
+
   let staffResponse;
-  if (pageResponse?.data?.node?.ministry) {
+  if (pageData?.getContentBySlug?.ministry) {
     staffResponse = await apolloClient.query({
       query: GET_STAFF,
       variables: {
-        ministry: pageResponse?.data?.node?.ministry,
+        ministry: pageData?.ministry,
       },
     });
   }
@@ -248,7 +254,7 @@ export async function getStaticProps({ params }) {
   const ministryResponse = await apolloClient.query({
     query: GET_MINISTRY_CONTENT,
     variables: {
-      ministry: pageResponse?.data?.node?.ministry,
+      ministry: pageData?.ministry,
     },
   });
 
@@ -285,6 +291,7 @@ export async function getStaticPaths() {
 
   // Get the paths we want to pre-render
   const paths = connectPages.map(({ id }) => ({
+    // TODO - use slug
     params: { page: getIdSuffix(id) },
   }));
 

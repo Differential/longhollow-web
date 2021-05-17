@@ -28,6 +28,7 @@ export default function FooterLinks({ channelId, baseRoute, title }) {
       <List as="ul" space="xs">
         {items.map(node => (
           <Box as="li" key={node.id}>
+            // TODO - use slug here
             <Styled.Link href={`${baseRoute}/${getIdSuffix(node.id)}`}>{node.title}</Styled.Link>
           </Box>
         ))}

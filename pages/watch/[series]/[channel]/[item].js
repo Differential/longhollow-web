@@ -29,7 +29,13 @@ export default function Item({ item } = {}) {
 
   return (
     <Layout meta={getMetaData(item)}>
-      {!src ? <MainPhotoHeader src={item.coverImage?.sources?.[0]?.uri} showImage={false} overlay="" /> : null}
+      {!src ? (
+        <MainPhotoHeader
+          src={item.coverImage?.sources?.[0]?.uri}
+          showImage={false}
+          overlay=""
+        />
+      ) : null}
       <Section mb="xl" px={{ _: 'l', md: 'xxl' }}>
         {src ? (
           <VideoPlayer
@@ -95,6 +101,7 @@ export async function getStaticPaths() {
       const series = await apolloClient.query({
         query: GET_MESSAGE_CHANNEL,
         variables: {
+          // TODO - use slug here
           itemId: getUniversalItemId(getIdSuffix(channelId)),
         },
       });
@@ -105,6 +112,7 @@ export async function getStaticPaths() {
   );
 
   const paths = items.flat().map(({ channelId, seriesId, itemId }) => ({
+    // TODO - use slug here - probably don't even need all these params
     params: {
       channel: getIdSuffix(channelId),
       series: getIdSuffix(seriesId),

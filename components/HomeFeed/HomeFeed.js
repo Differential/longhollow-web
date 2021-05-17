@@ -109,6 +109,7 @@ function FullLengthSermon(props = {}) {
               rounded
               src={props.sermon?.coverImage?.sources?.[0]?.uri}
               onClick={() =>
+                // TODO - use slug here
                 router.push(`/sermon/${getIdSuffix(props.sermon?.id)}`)
               }
             />
@@ -141,6 +142,7 @@ function HomeFeedLargeArticle({ article }) {
         src={article?.coverImage?.sources?.[0]?.uri}
         width="100%"
         action={() =>
+          // TODO - use slug here
           router.push(article?.linkURL || `/page/${getIdSuffix(article?.id)}`)
         }
       />
@@ -156,6 +158,7 @@ function HomeFeedArticles({ articles }) {
           key={i}
           color="quaternary"
           description={article?.summary}
+          // TODO - use slug here
           url={article?.linkURL || `/page/${getIdSuffix(article?.id)}`}
           urlText={article?.linkText || 'Learn More'}
           imageSrc={article?.coverImage?.sources?.[0]?.uri}

@@ -61,6 +61,7 @@ export default function Channel({ item } = {}) {
               mb="m"
               action={() =>
                 router.push(
+                  // TODO - use slug here
                   `/watch/${router.query.series}/${
                     router.query.channel
                   }/${getIdSuffix(node.id)}`
@@ -130,6 +131,7 @@ export async function getStaticPaths() {
   );
 
   const paths = channels.map(({ channelId, seriesId }) => ({
+    // TODO - use slug here - probably don't need all these params
     params: { channel: getIdSuffix(channelId), series: getIdSuffix(seriesId) },
   }));
 

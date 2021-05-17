@@ -132,6 +132,7 @@ export async function getStaticPaths() {
 
   // Get the paths we want to pre-render
   const paths = pages.map(({ id }) => ({
+    // TODO - use slug here?
     params: { id: getIdSuffix(id) },
   }));
 

@@ -30,7 +30,6 @@ export default function ContentSeriesContentItem({ item } = {}) {
   }
 
   const totalVideoCount = item?.childContentItemsConnection?.totalCount || 0;
-  console.log(item);
 
   return (
     <Layout meta={getMetaData(item)}>
@@ -59,6 +58,7 @@ export default function ContentSeriesContentItem({ item } = {}) {
               mb="m"
               action={() =>
                 router.push(
+                  // TODO - use slug here
                   `/watch/${router.query.series}/${
                     router.query.channel
                   }/${getIdSuffix(node.id)}`

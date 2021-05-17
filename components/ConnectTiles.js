@@ -32,6 +32,7 @@ const ConnectTiles = props => {
         items={featuredItems.map(item => ({
           src: item.coverImage?.sources?.[0]?.uri,
           title: item?.showTitleOverImage && item?.title,
+          // TODO - use slug
           action: () => router.push(`/connect/${getIdSuffix(item.id)}`),
         }))}
         {...props}

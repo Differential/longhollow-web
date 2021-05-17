@@ -17,6 +17,7 @@ import { getChannelId, getIdSuffix, getItemId } from 'utils';
 import useLiveStreams from 'hooks/useLiveStreams';
 import styled from 'styled-components';
 import { themeGet } from '@styled-system/theme-get';
+import { GET_CONTENT_BY_SLUG } from 'hooks/useContentBySlug';
 
 const Styled = {};
 
@@ -103,6 +104,7 @@ export default function Watch({ series, watchPages, sermons, baptisms = [] }) {
           <Styled.SermonImage
             rounded
             src={sermon?.coverImage?.sources?.[0]?.uri}
+            // TODO - use slug here?
             onClick={() => router.push(`/sermon/${getIdSuffix(sermon?.id)}`)}
           />
           <Box position="absolute" right="10px" bottom="10px">
@@ -141,6 +143,7 @@ export default function Watch({ series, watchPages, sermons, baptisms = [] }) {
                     color="primary"
                     cursor="pointer"
                     onClick={() =>
+                      // TODO - use slug here
                       router.push(`/watch/${getIdSuffix(seriesNode.id)}`)
                     }
                   >
@@ -169,6 +172,7 @@ export default function Watch({ series, watchPages, sermons, baptisms = [] }) {
                       maxWidth="400px"
                       action={() =>
                         router.push(
+                          // TODO - use slug here
                           `/watch/${getIdSuffix(seriesNode.id)}/${getIdSuffix(
                             node.id
                           )}`
@@ -179,7 +183,7 @@ export default function Watch({ series, watchPages, sermons, baptisms = [] }) {
               </CardGrid>
             </Box>
           ))}
-          {baptisms.length || (
+          {baptisms?.length ? (
             <Box key={'baptisms'} display="flex" flexDirection="column">
               <Box display="flex" justifyContent="space-between" width="100%">
                 <Heading
@@ -226,6 +230,7 @@ export default function Watch({ series, watchPages, sermons, baptisms = [] }) {
                     height="350px"
                     maxWidth="400px"
                     action={() =>
+                      // TODO - use slug here
                       router.push(
                         `/watch/${IDS.SERIES.BAPTISMS}/${
                           IDS.CHANNELS.BAPTISMS
@@ -236,7 +241,7 @@ export default function Watch({ series, watchPages, sermons, baptisms = [] }) {
                 ))}
               </CardGrid>
             </Box>
-          )}
+          ) : null}
         </CardGrid>
       </Section>
       {watchPages?.length ? (
@@ -265,6 +270,7 @@ export default function Watch({ series, watchPages, sermons, baptisms = [] }) {
                     label: page.buttonText,
                     onClick: () =>
                       router.push(
+                        // TODO - use slug here
                         page.buttonLink || `/watch/page/${getIdSuffix(page.id)}`
                       ),
                   },
@@ -303,21 +309,18 @@ export async function getStaticProps() {
   });
 
   const baptismChannel = await apolloClient.query({
-    query: GET_MESSAGE_CHANNEL,
+    query: GET_CONTENT_BY_SLUG,
     variables: {
-      itemId: getItemId(IDS.CHANNELS.BAPTISMS),
-      orderBy: {
-        field: 'DATE',
-        direction: 'DESC',
-      },
+      slug: 'baptisms',
     },
   });
   const baptisms = (
-    baptismChannel?.data?.node?.childContentItemsConnection?.edges || []
+    baptismChannel?.data?.getContentBySlug?.childContentItemsConnection
+      ?.edges || []
   ).map(node => ({
     node: {
       ...node.node,
-      coverImage: baptismChannel.data.node.coverImage,
+      coverImage: baptismChannel.data.getContentBySlug.coverImage,
     },
   }));
 
