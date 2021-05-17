@@ -14,6 +14,9 @@ export const CONTENT_CHANNEL_FRAGMENT = gql`
               uri
             }
           }
+          sharing {
+            url
+          }
         }
       }
     }

@@ -16,7 +16,13 @@ import {
   Quote,
 } from 'components';
 import { Button, CardGrid, Longform, Section } from 'ui-kit';
-import { getChildrenByType, getIdSuffix, getItemId, getMetaData } from 'utils';
+import {
+  getChildrenByType,
+  getIdSuffix,
+  getItemId,
+  getMetaData,
+  getSlugFromURL,
+} from 'utils';
 import IDS from 'config/ids';
 import { initializeApollo } from 'lib/apolloClient';
 import { Info } from 'phosphor-react';
@@ -58,8 +64,9 @@ export default function Page({
     ? relatedContent.getMinistryContent.slice(0, 4)
     : [];
 
-  // TODO - use slug here
-  links = links.filter(link => getIdSuffix(link.id) !== router.query.page);
+  links = links.filter(
+    link => getSlugFromURL(link?.sharing?.url) !== router.query.page
+  );
 
   return (
     <Layout meta={getMetaData(node)} bg="bg_alt">
@@ -94,8 +101,9 @@ export default function Page({
                 title={link.title}
                 description={link.subtitle}
                 imageSrc={link.coverImage?.sources?.[0]?.uri}
-                // TODO - use slug here
-                onClick={() => router.push(`/page/${getIdSuffix(link.id)}`)}
+                onClick={() =>
+                  router.push(`/${getSlugFromURL(link?.sharing?.url)}`)
+                }
               />
             ))}
           </EventsCallout>
@@ -120,8 +128,9 @@ export default function Page({
                     title={node.title}
                     description={node.summary}
                     urlText={node.linkText}
-                    // TODO - use slug here
-                    url={node.linkURL || `/page/${getIdSuffix(node.id)}`}
+                    url={
+                      node.linkURL || `/${getSlugFromURL(node?.sharing?.url)}`
+                    }
                   />
                 ))}
               </ArticleLinks>
@@ -290,9 +299,8 @@ export async function getStaticPaths() {
   );
 
   // Get the paths we want to pre-render
-  const paths = connectPages.map(({ id }) => ({
-    // TODO - use slug
-    params: { page: getIdSuffix(id) },
+  const paths = connectPages.map(({ sharing }) => ({
+    params: { page: getSlugFromURL(sharing?.url) },
   }));
 
   // Fallback true - if a page doesn't exist we will render it on the fly.

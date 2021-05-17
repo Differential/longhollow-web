@@ -9,6 +9,9 @@ export const CONTENT_SERIES_CONTENT_ITEM_FRAGMENT = gql`
         node {
           id
           title
+          sharing {
+            url
+          }
         }
       }
       pageInfo {

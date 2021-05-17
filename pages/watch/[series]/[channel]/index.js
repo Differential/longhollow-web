@@ -2,13 +2,20 @@ import { LargeImage, Layout, MainPhotoHeader } from 'components';
 import { GET_MESSAGE_CHANNEL } from 'hooks/useMessageChannel';
 import { Box, Button, Section } from 'ui-kit';
 import { useRouter } from 'next/router';
-import { getIdSuffix, getItemId, getMetaData, getChannelId } from 'utils';
+import {
+  getIdSuffix,
+  getItemId,
+  getMetaData,
+  getChannelId,
+  getSlugFromURL,
+} from 'utils';
 import { useTheme } from 'styled-components';
 import { useState } from 'react';
 import { useLazyQuery } from '@apollo/client';
 import { initializeApollo } from 'lib/apolloClient';
 import IDS from 'config/ids';
 import { GET_MESSAGE_SERIES } from 'hooks/useMessageSeries';
+import { GET_CONTENT_BY_SLUG } from 'hooks/useContentBySlug';
 
 export default function Channel({ item } = {}) {
   const router = useRouter();
@@ -61,10 +68,9 @@ export default function Channel({ item } = {}) {
               mb="m"
               action={() =>
                 router.push(
-                  // TODO - use slug here
                   `/watch/${router.query.series}/${
                     router.query.channel
-                  }/${getIdSuffix(node.id)}`
+                  }/${getSlugFromURL(node?.sharing?.url)}`
                 )
               }
             />
@@ -93,16 +99,16 @@ export async function getStaticProps(context) {
   const apolloClient = initializeApollo();
 
   const itemResponse = await apolloClient.query({
-    query: GET_MESSAGE_CHANNEL,
+    query: GET_CONTENT_BY_SLUG,
     variables: {
-      itemId: getItemId(context.params.channel),
+      slug: context.params.channel,
     },
   });
 
   return {
     props: {
       initialApolloState: apolloClient.cache.extract(),
-      item: itemResponse?.data?.node,
+      item: itemResponse?.data?.getContentBySlug,
     },
   };
 }
@@ -125,14 +131,16 @@ export async function getStaticPaths() {
     )
   ).flatMap(({ data }) =>
     data.node.childContentItemsConnection?.edges.map(({ node }) => ({
-      channelId: node.id,
+      channel: node,
       seriesId: data.node.id,
     }))
   );
 
-  const paths = channels.map(({ channelId, seriesId }) => ({
-    // TODO - use slug here - probably don't need all these params
-    params: { channel: getIdSuffix(channelId), series: getIdSuffix(seriesId) },
+  const paths = channels.map(({ channel, seriesId }) => ({
+    params: {
+      channel: getSlugFromURL(channel?.sharing?.url),
+      series: getIdSuffix(seriesId),
+    },
   }));
 
   // Fallback true - if a page doesn't exist we will render it on the fly.

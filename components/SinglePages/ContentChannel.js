@@ -1,7 +1,7 @@
 import { LargeImage, Layout } from 'components';
 import { Box, Heading, Section } from 'ui-kit';
 import { useRouter } from 'next/router';
-import { getIdSuffix, getMetaData } from 'utils';
+import { getMetaData, getSlugFromURL } from 'utils';
 import { useTheme } from 'styled-components';
 
 export default function Series({ series } = {}) {
@@ -43,10 +43,7 @@ export default function Series({ series } = {}) {
               mr="m"
               mb="m"
               action={() =>
-                router.push(
-                  // TODO - use slug here
-                  `/watch/${router.query.series}/${getIdSuffix(node.id)}`
-                )
+                router.push(`/watch/${getSlugFromURL(node?.sharing?.url)}`)
               }
             />
           ))}

@@ -12,7 +12,7 @@ import {
 } from 'components';
 import IDS from 'config/ids';
 import { CardGrid, Longform, Section } from 'ui-kit';
-import { getIdSuffix, getItemId, getMetaData } from 'utils';
+import { getIdSuffix, getItemId, getMetaData, getSlugFromURL } from 'utils';
 import { initializeApollo } from 'lib/apolloClient';
 import { GET_CAMPUSES } from 'hooks/useCampuses';
 import { GET_CONTENT_BY_SLUG } from 'hooks/useContentBySlug';
@@ -94,8 +94,9 @@ export default function Page({ data = {}, campuses }) {
                     title={node.title}
                     description={node.summary}
                     urlText={node.linkText}
-                    // TODO - use slug here
-                    url={node.linkURL || `/page/${getIdSuffix(node.id)}`}
+                    url={
+                      node.linkURL || `/${getSlugFromURL(node?.sharing?.url)}`
+                    }
                   />
                 ))}
               </ArticleLinks>
@@ -147,9 +148,8 @@ export async function getStaticPaths() {
   );
 
   // Get the paths we want to pre-render
-  const paths = nextStepsPages.map(({ id }) => ({
-    // TODO - use slug
-    params: { page: getIdSuffix(id) },
+  const paths = nextStepsPages.map(({ sharing }) => ({
+    params: { page: getSlugFromURL(sharing?.url) },
   }));
 
   // Fallback true - if a page doesn't exist we will render it on the fly.

@@ -12,8 +12,7 @@ import IDS from 'config/ids';
 import { Box, Image, system, CardGrid, Heading, Section, theme } from 'ui-kit';
 import { GET_MESSAGE_SERIES } from 'hooks/useMessageSeries';
 import { GET_CONTENT_CHANNEL } from 'hooks/useContentChannel';
-import { GET_MESSAGE_CHANNEL } from 'hooks/useMessageChannel';
-import { getChannelId, getIdSuffix, getItemId } from 'utils';
+import { getChannelId, getIdSuffix, getSlugFromURL } from 'utils';
 import useLiveStreams from 'hooks/useLiveStreams';
 import styled from 'styled-components';
 import { themeGet } from '@styled-system/theme-get';
@@ -29,6 +28,8 @@ Styled.SermonContainer = styled(Box)`
     width: 300px;
   }
 `;
+
+const BAPTISMS_CHANNEL_SLUG = 'baptisms';
 
 Styled.SermonImage = styled(Image)`
   width: 100%;
@@ -68,11 +69,7 @@ export default function Watch({ series, watchPages, sermons, baptisms = [] }) {
               width: 'auto',
               padding: '14px 28px',
             }}
-            href={
-              live
-                ? liveStreams[0].webViewUrl
-                : 'about/34fa5fa56a33a230f3889b54e3f6c30e'
-            }
+            href={live ? liveStreams[0].webViewUrl : 'about/schedule'}
           >
             {live ? 'Watch now' : 'Our live schedule'}
           </a>
@@ -85,7 +82,7 @@ export default function Watch({ series, watchPages, sermons, baptisms = [] }) {
               pointerEvents: 'auto',
               padding: '14px 28px',
             }}
-            href="/next-steps/3644e32503017b6f2f19edfdff0eb28a"
+            href="/next-steps/join-us-online"
           >
             {live ? 'Other ways to watch' : 'How to watch'}
           </a>
@@ -104,8 +101,9 @@ export default function Watch({ series, watchPages, sermons, baptisms = [] }) {
           <Styled.SermonImage
             rounded
             src={sermon?.coverImage?.sources?.[0]?.uri}
-            // TODO - use slug here?
-            onClick={() => router.push(`/sermon/${getIdSuffix(sermon?.id)}`)}
+            onClick={() =>
+              router.push(`/sermon/${getSlugFromURL(sermon?.sharing?.url)}`)
+            }
           />
           <Box position="absolute" right="10px" bottom="10px">
             <PlayCircle
@@ -143,7 +141,6 @@ export default function Watch({ series, watchPages, sermons, baptisms = [] }) {
                     color="primary"
                     cursor="pointer"
                     onClick={() =>
-                      // TODO - use slug here
                       router.push(`/watch/${getIdSuffix(seriesNode.id)}`)
                     }
                   >
@@ -172,10 +169,9 @@ export default function Watch({ series, watchPages, sermons, baptisms = [] }) {
                       maxWidth="400px"
                       action={() =>
                         router.push(
-                          // TODO - use slug here
-                          `/watch/${getIdSuffix(seriesNode.id)}/${getIdSuffix(
-                            node.id
-                          )}`
+                          `/watch/${getIdSuffix(
+                            seriesNode.id
+                          )}/${getSlugFromURL(node?.sharing?.url)}`
                         )
                       }
                     />
@@ -204,7 +200,7 @@ export default function Watch({ series, watchPages, sermons, baptisms = [] }) {
                     cursor="pointer"
                     onClick={() =>
                       router.push(
-                        `/watch/${IDS.SERIES.BAPTISMS}/${IDS.CHANNELS.BAPTISMS}`
+                        `/watch/${IDS.SERIES.BAPTISMS}/${BAPTISMS_CHANNEL_SLUG}`
                       )
                     }
                   >
@@ -230,11 +226,12 @@ export default function Watch({ series, watchPages, sermons, baptisms = [] }) {
                     height="350px"
                     maxWidth="400px"
                     action={() =>
-                      // TODO - use slug here
                       router.push(
-                        `/watch/${IDS.SERIES.BAPTISMS}/${
-                          IDS.CHANNELS.BAPTISMS
-                        }/${getIdSuffix(node.id)}`
+                        `/watch/${
+                          IDS.SERIES.BAPTISMS
+                        }/${BAPTISMS_CHANNEL_SLUG}/${getSlugFromURL(
+                          node?.sharing?.url
+                        )}`
                       )
                     }
                   />
@@ -270,8 +267,8 @@ export default function Watch({ series, watchPages, sermons, baptisms = [] }) {
                     label: page.buttonText,
                     onClick: () =>
                       router.push(
-                        // TODO - use slug here
-                        page.buttonLink || `/watch/page/${getIdSuffix(page.id)}`
+                        page.buttonLink ||
+                          `/watch/page/${getSlugFromURL(page?.sharing?.url)}`
                       ),
                   },
                 ]}
@@ -311,7 +308,7 @@ export async function getStaticProps() {
   const baptismChannel = await apolloClient.query({
     query: GET_CONTENT_BY_SLUG,
     variables: {
-      slug: 'baptisms',
+      slug: BAPTISMS_CHANNEL_SLUG,
     },
   });
   const baptisms = (

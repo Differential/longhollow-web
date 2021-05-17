@@ -6,6 +6,7 @@ import getChannelId from './getChannelId';
 import getChildrenByType from './getChildrenByType';
 import getIdSuffix from './getIdSuffix';
 import getItemId from './getItemId';
+import getSlugFromURL from './getSlugFromURL';
 import getStaffId from './getStaffId';
 import getMetaData from './getMetaData';
 import getURLFromType from './getURLFromType';
@@ -28,6 +29,7 @@ export {
   getIdSuffix,
   getItemId,
   getMetaData,
+  getSlugFromURL,
   getStaffId,
   getURLFromType,
   noop,

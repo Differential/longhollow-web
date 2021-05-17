@@ -7,7 +7,13 @@ import {
   MainPhotoHeader,
   MarketingHeadline,
 } from 'components';
-import { getChannelId, getIdSuffix, getItemId, getMetaData } from 'utils';
+import {
+  getChannelId,
+  getIdSuffix,
+  getItemId,
+  getMetaData,
+  getSlugFromURL,
+} from 'utils';
 import IDS from 'config/ids';
 import { initializeApollo } from 'lib/apolloClient';
 import { CardGrid, Longform, Section } from 'ui-kit';
@@ -71,9 +77,8 @@ export default function Page({ data = {}, campuses }) {
                               label: node.linkText,
                               onClick: () => {
                                 router.push(
-                                  // TODO - use slug here
                                   node.linkURL ||
-                                    `/page/${getIdSuffix(node.id)}`
+                                    `/${getSlugFromURL(node?.sharing?.url)}`
                                 );
                               },
                             },
@@ -166,9 +171,8 @@ export async function getStaticPaths() {
   );
 
   // Get the paths we want to pre-render
-  const paths = aboutPages.map(({ id }) => ({
-    // TODO - use slug
-    params: { page: getIdSuffix(id) },
+  const paths = aboutPages.map(({ sharing }) => ({
+    params: { page: getSlugFromURL(sharing?.url) },
   }));
 
   // Fallback true - if a page doesn't exist we will render it on the fly.

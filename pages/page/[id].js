@@ -6,7 +6,7 @@ import { GET_CONTENT_CHANNEL } from 'hooks/useContentChannel';
 import { Layout, MainPhotoHeader } from 'components';
 import { Box, Button, Heading, Longform, Section } from 'ui-kit';
 import { initializeApollo } from 'lib/apolloClient';
-import { getItemId, getMetaData, getIdSuffix } from 'utils';
+import { getItemId, getMetaData, getIdSuffix, getSlugFromURL } from 'utils';
 
 export default function Page({ data } = {}) {
   const router = useRouter();
@@ -131,9 +131,8 @@ export async function getStaticPaths() {
     .filter(p => !!p);
 
   // Get the paths we want to pre-render
-  const paths = pages.map(({ id }) => ({
-    // TODO - use slug here?
-    params: { id: getIdSuffix(id) },
+  const paths = pages.map(({ sharing }) => ({
+    params: { id: getSlugFromURL(sharing?.url) },
   }));
 
   // Fallback blocking - if a page doesn't exist we will render it on the fly and then return it.

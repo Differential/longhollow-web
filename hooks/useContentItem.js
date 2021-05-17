@@ -47,6 +47,9 @@ export const UNIVERSAL_CONTENT_ITEM_FRAGMENT = gql`
           parentChannel {
             id
           }
+          sharing {
+            url
+          }
           ... on UniversalContentItem {
             id
             campus {

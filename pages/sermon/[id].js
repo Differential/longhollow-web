@@ -9,6 +9,7 @@ import {
   getChannelId,
   getIdSuffix,
   getItemId as getUniversalItemId,
+  getSlugFromURL,
 } from 'utils';
 import IDS from 'config/ids';
 import { GET_MESSAGE_SERIES } from 'hooks/useMessageSeries';
@@ -102,20 +103,18 @@ export async function getStaticPaths() {
       const series = await apolloClient.query({
         query: GET_MESSAGE_CHANNEL,
         variables: {
-          // TODO - use slug here?
           itemId: getUniversalItemId(getIdSuffix(channelId)),
         },
       });
       return series.data.node.childContentItemsConnection.edges.map(
-        ({ node }) => ({ channelId, seriesId, itemId: node.id })
+        ({ node }) => node
       );
     })
   );
 
-  // TODO - use slug here?
-  const paths = items.flat().map(({ itemId }) => ({
+  const paths = items.flat().map(item => ({
     params: {
-      id: getIdSuffix(itemId),
+      id: getSlugFromURL(item?.sharing?.url),
     },
   }));
 

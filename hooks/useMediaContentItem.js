@@ -16,6 +16,9 @@ export const WEEKEND_CONTENT_ITEM_FRAGMENT = gql`
       }
     }
     htmlContent
+    sharing {
+      url
+    }
   }
 `;
 
