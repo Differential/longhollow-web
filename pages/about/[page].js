@@ -14,7 +14,7 @@ import { GET_CONTENT_CHANNEL } from 'hooks/useContentChannel';
 import { GET_CAMPUSES } from 'hooks/useCampuses';
 import { GET_CONTENT_BY_SLUG } from 'hooks/useContentBySlug';
 
-export default function Page({ data = {}, campuses }) {
+export default function Page({ data = {}, campuses, dropdownData }) {
   const router = useRouter();
 
   if (data.loading || router.isFallback) {
@@ -25,7 +25,7 @@ export default function Page({ data = {}, campuses }) {
   const ctaLinks = data.ctaLinks;
 
   return (
-    <Layout meta={getMetaData(data)} bg="bg_alt">
+    <Layout meta={getMetaData(data)} bg="bg_alt" dropdownData={dropdownData}>
       <MainPhotoHeader
         src={data.coverImage?.sources?.[0].uri || ''}
         title={data.title}

@@ -16,7 +16,7 @@ import { initializeApollo } from 'lib/apolloClient';
 import { GET_CAMPUSES } from 'hooks/useCampuses';
 import { GET_CONTENT_BY_SLUG } from 'hooks/useContentBySlug';
 
-export default function Page({ data = {}, campuses }) {
+export default function Page({ data = {}, campuses, dropdownData }) {
   const router = useRouter();
 
   const { loading, error, getContentBySlug: node = {} } = data;
@@ -30,7 +30,7 @@ export default function Page({ data = {}, campuses }) {
   const childContent = node.childContentItemsConnection?.edges;
 
   return (
-    <Layout meta={getMetaData(node)} bg="bg_alt">
+    <Layout meta={getMetaData(node)} bg="bg_alt" dropdownData={dropdownData}>
       <MainPhotoHeader
         mb={{ _: 'l', md: 'xxl' }}
         src={node.coverImage?.sources?.[0].uri || ''}

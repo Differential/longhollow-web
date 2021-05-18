@@ -43,7 +43,13 @@ Styled.SermonImage = styled(Image)`
   ${system}
 `;
 
-export default function Watch({ series, watchPages, sermons, baptisms = [] }) {
+export default function Watch({
+  series,
+  watchPages,
+  sermons,
+  baptisms = [],
+  dropdownData,
+}) {
   const router = useRouter();
 
   const sermon = sermons?.[0]?.node;
@@ -52,7 +58,7 @@ export default function Watch({ series, watchPages, sermons, baptisms = [] }) {
   const live = liveStreams?.[0]?.isLive;
 
   return (
-    <Layout title="Watch">
+    <Layout dropdownData={dropdownData}>
       <MainPhotoHeader
         src={sermon?.coverImage?.sources?.[0]?.uri}
         title="Join us live"

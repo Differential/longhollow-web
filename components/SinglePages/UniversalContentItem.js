@@ -4,7 +4,7 @@ import { Layout, MainPhotoHeader } from 'components';
 import { Box, Button, Heading, Longform, Section } from 'ui-kit';
 import { getMetaData } from 'utils';
 
-export default function Page({ data } = {}) {
+export default function Page({ data, dropdownData } = {}) {
   const router = useRouter();
 
   if (data?.loading || router.isFallback) {
@@ -12,7 +12,7 @@ export default function Page({ data } = {}) {
   }
 
   return (
-    <Layout meta={getMetaData(data)} bg="bg_alt">
+    <Layout meta={getMetaData(data)} bg="bg_alt" dropdownData={dropdownData}>
       <MainPhotoHeader
         src={data.coverImage?.sources?.[0].uri || ''}
         width="auto"

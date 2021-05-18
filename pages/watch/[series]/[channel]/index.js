@@ -11,7 +11,7 @@ import IDS from 'config/ids';
 import { GET_MESSAGE_SERIES } from 'hooks/useMessageSeries';
 import { GET_CONTENT_BY_SLUG } from 'hooks/useContentBySlug';
 
-export default function Channel({ item } = {}) {
+export default function Channel({ item, dropdownData } = {}) {
   const router = useRouter();
   const theme = useTheme();
 
@@ -36,7 +36,7 @@ export default function Channel({ item } = {}) {
   const totalVideoCount = item?.childContentItemsConnection?.totalCount || 0;
 
   return (
-    <Layout meta={getMetaData(item)}>
+    <Layout meta={getMetaData(item)} dropdownData={dropdownData}>
       <MainPhotoHeader
         src={item?.coverImage.sources?.[0]?.uri}
         title={item?.title}

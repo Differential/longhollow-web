@@ -34,6 +34,7 @@ export default function Page({
   staff = [],
   relatedContent = {},
   campuses,
+  dropdownData,
 }) {
   const router = useRouter();
   const theme = useTheme();
@@ -66,14 +67,14 @@ export default function Page({
   );
 
   return (
-    <Layout meta={getMetaData(node)} bg="bg_alt">
+    <Layout meta={getMetaData(node)} bg="bg_alt" dropdownData={dropdownData}>
       <MainPhotoHeader
         src={node.coverImage?.sources?.[0].uri || ''}
         title={node.title}
         subtitle={node.subtitle}
         summary={node.summary}
         showTitleOverImage={node.showTitleOverImage}
-        mb={{ _: 0, lg: 'xxl' }}
+        mb={{ _: 'xl', lg: 'xxl' }}
       />
       {links?.length ? (
         <Section>

@@ -8,7 +8,7 @@ import IDS from 'config/ids';
 import { GET_MESSAGE_SERIES } from 'hooks/useMessageSeries';
 import { GET_CONTENT_BY_SLUG } from 'hooks/useContentBySlug';
 
-export default function Item({ item } = {}) {
+export default function Item({ item, dropdownData } = {}) {
   const router = useRouter();
   if (router.isFallback) {
     return null;
@@ -18,7 +18,7 @@ export default function Item({ item } = {}) {
     ?.sources[0].uri;
 
   return (
-    <Layout meta={getMetaData(item)}>
+    <Layout meta={getMetaData(item)} dropdownData={dropdownData}>
       {!src ? (
         <MainPhotoHeader
           src={item.coverImage?.sources?.[0]?.uri}
