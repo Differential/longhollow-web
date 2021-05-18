@@ -14,6 +14,7 @@ import {
 import IDS from 'config/ids';
 import { GET_MESSAGE_SERIES } from 'hooks/useMessageSeries';
 import { GET_MESSAGE_CHANNEL } from 'hooks/useMessageChannel';
+import { GET_CONTENT_BY_SLUG } from 'hooks/useContentBySlug';
 
 export default function Item({ item, dropdownData } = {}) {
   const router = useRouter();
@@ -53,24 +54,20 @@ export default function Item({ item, dropdownData } = {}) {
   );
 }
 
-function getItemId(id) {
-  return `MediaContentItem:${id}`;
-}
-
 export async function getStaticProps(context) {
   const apolloClient = initializeApollo();
 
   const itemResponse = await apolloClient.query({
-    query: GET_MEDIA_CONTENT_ITEM,
+    query: GET_CONTENT_BY_SLUG,
     variables: {
-      itemId: getItemId(context.params.id),
+      slug: context.params.slug,
     },
   });
 
   return {
     props: {
       initialApolloState: apolloClient.cache.extract(),
-      item: itemResponse?.data?.node,
+      item: itemResponse?.data?.getContentBySlug,
     },
   };
 }
@@ -114,7 +111,7 @@ export async function getStaticPaths() {
 
   const paths = items.flat().map(item => ({
     params: {
-      id: getSlugFromURL(item?.sharing?.url),
+      slug: getSlugFromURL(item?.sharing?.url),
     },
   }));
 
