@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router';
 
-import { GET_CONTENT_ITEM } from 'hooks/useContentItem';
 import { GET_CONTENT_CHANNEL } from 'hooks/useContentChannel';
 import {
   ArticleLink,
@@ -18,8 +17,6 @@ import {
 import { Button, CardGrid, Longform, Section } from 'ui-kit';
 import {
   getChildrenByType,
-  getIdSuffix,
-  getItemId,
   getMetaData,
   getSlugFromURL,
 } from 'utils';

@@ -1,19 +1,12 @@
 import { useRouter } from 'next/router';
 
-import { GET_CONTENT_ITEM } from 'hooks/useContentItem';
 import {
   CampusFilter,
   Layout,
   MainPhotoHeader,
   MarketingHeadline,
 } from 'components';
-import {
-  getChannelId,
-  getIdSuffix,
-  getItemId,
-  getMetaData,
-  getSlugFromURL,
-} from 'utils';
+import { getChannelId, getMetaData, getSlugFromURL } from 'utils';
 import IDS from 'config/ids';
 import { initializeApollo } from 'lib/apolloClient';
 import { CardGrid, Longform, Section } from 'ui-kit';

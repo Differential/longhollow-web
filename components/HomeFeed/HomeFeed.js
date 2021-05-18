@@ -14,7 +14,7 @@ import {
 } from 'components';
 import { Box, CardGrid, Heading, Section, Text, theme } from 'ui-kit';
 import { useRouter } from 'next/router';
-import { getIdSuffix, getSlugFromURL } from 'utils';
+import { getSlugFromURL } from 'utils';
 import Styled from './HomeFeed.styles';
 import { useCurrentUser } from 'hooks';
 import usePersonaFeed from 'hooks/usePersonaFeed';

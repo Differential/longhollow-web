@@ -6,7 +6,7 @@ import { GET_CONTENT_CHANNEL } from 'hooks/useContentChannel';
 import { Layout, MainPhotoHeader } from 'components';
 import { Box, Button, Heading, Longform, Section } from 'ui-kit';
 import { initializeApollo } from 'lib/apolloClient';
-import { getItemId, getMetaData, getIdSuffix, getSlugFromURL } from 'utils';
+import { getItemId, getMetaData, getSlugFromURL } from 'utils';
 
 export default function Page({ data } = {}) {
   const router = useRouter();
