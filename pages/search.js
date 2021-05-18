@@ -1,17 +1,19 @@
 import { Layout } from 'components';
 import { Search } from 'components';
 import { useState } from 'react';
+import { useTheme } from 'styled-components';
 import { CardGrid } from 'ui-kit';
 
 export function SearchPageContent({ filtering, setFiltering }) {
+  const theme = useTheme();
   return (
     <CardGrid
-      px={{ _: 'l', md: 'xxl' }}
-      py={{ _: 'l', md: 'xxl' }}
+      px={{ _: 'l', md: 'xl', lg: 'xxl' }}
+      py={{ _: 'l', md: 'xl', lg: 'xxl' }}
       gridColumnGap="xl"
       columns="1"
       width="100%"
-      bg="bg"
+      backgroundColor={`${theme.colors.gray}50`}
     >
       <Search filtering={filtering} setFiltering={setFiltering} />
     </CardGrid>
