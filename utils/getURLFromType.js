@@ -1,4 +1,4 @@
-const { default: getSlugFromURL } = require('./getSlugFromURL');
+import getSlugFromURL from "./getSlugFromUrl";
 
 function getURLFromType(node) {
   const [type, randomId] = node.id.split(':');
