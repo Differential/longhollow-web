@@ -2,13 +2,7 @@ import { LargeImage, Layout, MainPhotoHeader } from 'components';
 import { GET_MESSAGE_CHANNEL } from 'hooks/useMessageChannel';
 import { Box, Button, Section } from 'ui-kit';
 import { useRouter } from 'next/router';
-import {
-  getIdSuffix,
-  getItemId,
-  getMetaData,
-  getChannelId,
-  getSlugFromURL,
-} from 'utils';
+import { getIdSuffix, getMetaData, getChannelId, getSlugFromURL } from 'utils';
 import { useTheme } from 'styled-components';
 import { useState } from 'react';
 import { useLazyQuery } from '@apollo/client';

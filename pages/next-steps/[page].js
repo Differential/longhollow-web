@@ -12,7 +12,7 @@ import {
 } from 'components';
 import IDS from 'config/ids';
 import { CardGrid, Longform, Section } from 'ui-kit';
-import { getIdSuffix, getItemId, getMetaData, getSlugFromURL } from 'utils';
+import { getMetaData, getSlugFromURL } from 'utils';
 import { initializeApollo } from 'lib/apolloClient';
 import { GET_CAMPUSES } from 'hooks/useCampuses';
 import { GET_CONTENT_BY_SLUG } from 'hooks/useContentBySlug';

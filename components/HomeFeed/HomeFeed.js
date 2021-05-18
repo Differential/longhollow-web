@@ -144,7 +144,7 @@ function HomeFeedLargeArticle({ article }) {
         width="100%"
         action={() =>
           router.push(
-            article?.linkURL || `/page/${getSlugFromURL(article?.sharing?.url)}`
+            article?.linkURL || `/${getSlugFromURL(article?.sharing?.url)}`
           )
         }
       />
@@ -160,9 +160,7 @@ function HomeFeedArticles({ articles }) {
           key={i}
           color="quaternary"
           description={article?.summary}
-          url={
-            article?.linkURL || `/page/${getSlugFromURL(article?.sharing?.url)}`
-          }
+          url={article?.linkURL || `/${getSlugFromURL(article?.sharing?.url)}`}
           urlText={article?.linkText || 'Learn More'}
           imageSrc={article?.coverImage?.sources?.[0]?.uri}
         />
