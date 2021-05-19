@@ -28,14 +28,12 @@ export const CONTENT_SERIES_CONTENT_ITEM_FRAGMENT = gql`
 `;
 
 export const GET_MESSAGE_CHANNEL = gql`
-  query getMessageChannel(
-    $itemId: ID!
-  ) {
+  query getMessageChannel($itemId: ID!) {
     node(id: $itemId) {
       ...ContentSeriesContentItemFragment
     }
-    ${CONTENT_SERIES_CONTENT_ITEM_FRAGMENT}
   }
+  ${CONTENT_SERIES_CONTENT_ITEM_FRAGMENT}
 `;
 
 function useMessageChannel(options = {}) {

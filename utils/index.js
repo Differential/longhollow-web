@@ -4,6 +4,7 @@ import formatPhoneNumber from './formatPhoneNumber';
 import getAge from './getAge';
 import getChannelId from './getChannelId';
 import getChildrenByType from './getChildrenByType';
+import getIdPrefix from './getIdPrefix';
 import getIdSuffix from './getIdSuffix';
 import getItemId from './getItemId';
 import getSlugFromURL from './getSlugFromUrl';
@@ -26,6 +27,7 @@ export {
   getAge,
   getChannelId,
   getChildrenByType,
+  getIdPrefix,
   getIdSuffix,
   getItemId,
   getMetaData,
