@@ -113,9 +113,7 @@ function FullLengthSermon(props = {}) {
               rounded
               src={props.sermon?.coverImage?.sources?.[0]?.uri}
               onClick={() =>
-                router.push(
-                  `/sermon/${getSlugFromURL(props.sermon?.sharing?.url)}`
-                )
+                router.push(`/${getSlugFromURL(props.sermon?.sharing?.url)}`)
               }
             />
             <Box position="absolute" right="10px" bottom="10px">

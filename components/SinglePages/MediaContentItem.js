@@ -1,7 +1,7 @@
 import { Layout, MainPhotoHeader } from 'components';
 import { useRouter } from 'next/router';
 import VideoPlayer from 'components/VideoPlayer/VideoJSPlayer';
-import { Heading, Section } from 'ui-kit';
+import { Heading, Section, Longform } from 'ui-kit';
 import { getMetaData } from 'utils';
 
 export default function WeekendContentItem({ item, dropdownData } = {}) {
@@ -41,6 +41,7 @@ export default function WeekendContentItem({ item, dropdownData } = {}) {
         <Heading variant="h4" fontWeight="500" mb="m">
           {item.summary}
         </Heading>
+        <Longform dangerouslySetInnerHTML={{ __html: item.htmlContent }} />
       </Section>
     </Layout>
   );

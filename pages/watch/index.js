@@ -90,7 +90,7 @@ export default function Watch({
               onClick: () =>
                 router.push(
                   sermon?.buttonLink ||
-                    `/sermon/${getSlugFromURL(sermon?.sharing?.url)}`
+                    `/${getSlugFromURL(sermon?.sharing?.url)}`
                 ),
             },
           ]}
