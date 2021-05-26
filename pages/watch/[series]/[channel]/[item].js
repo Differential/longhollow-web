@@ -101,7 +101,9 @@ export default function Item({ item, dropdownData } = {}) {
               <Styled.SermonImage
                 rounded
                 src={item.coverImage?.sources?.[0]?.uri}
-                onClick={() => router.push(`/${getIdSuffix(item.id)}`)}
+                onClick={() =>
+                  router.push(`/${getSlugFromURL(item.sharing?.url)}`)
+                }
               />
               <Box position="absolute" right="10px" bottom="10px">
                 <PlayCircle

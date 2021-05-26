@@ -97,7 +97,6 @@ export async function getStaticProps(context) {
       slug: context.params.channel,
     },
   });
-  console.log(itemResponse);
 
   return {
     props: {
