@@ -41,16 +41,14 @@ Styled.SermonImage = styled(Image)`
 
 Styled.SermonSelector = styled(Box)`
   display: flex;
+  margin: ${themeGet('space.l')} 0;
   -webkit-tap-highlight-color: transparent;
 
   @media screen and (min-width: ${themeGet('breakpoints.lg')}) {
     color: white;
+    margin: 0;
     position: absolute;
-    top: 10%;
-  }
-
-  @media screen and (min-width: ${themeGet('breakpoints.xl')}) {
-    top: ${themeGet('space.xl')};
+    top: ${themeGet('space.l')};
   }
 
   ${system}
