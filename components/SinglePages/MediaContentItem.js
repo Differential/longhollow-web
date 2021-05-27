@@ -1,19 +1,27 @@
-import { Layout, MainPhotoHeader } from 'components';
+import { Carousel, Layout, MainPhotoHeader } from 'components';
 import { useRouter } from 'next/router';
 import VideoPlayer from 'components/VideoPlayer/VideoJSPlayer';
-import { Heading, Section, Longform } from 'ui-kit';
+import { Heading, Section, Longform, Box, Text } from 'ui-kit';
 import { getMetaData, getSlugFromURL } from 'utils';
 import { useState } from 'react';
+import { PlayCircle } from 'phosphor-react';
+import { useTheme } from 'styled-components';
+import Styled from 'components/HomeFeed/HomeFeed.styles';
 
 export default function WeekendContentItem({ item, dropdownData } = {}) {
-  const [selectedClip, setSelectedClip] = useState(0);
+  const clips = item?.childContentItemsConnection?.edges || [];
 
+  const [selectedClip, setSelectedClip] = useState(0);
+  const [showing, setShowing] = useState({
+    clips: clips?.length > 0,
+    full: !(clips?.length > 0),
+  });
+
+  const theme = useTheme();
   const router = useRouter();
   if (router.isFallback) {
     return null;
   }
-
-  const clips = item?.childContentItemsConnection?.edges || [];
 
   let src = item.videos?.filter(({ sources }) => sources.length)[0]?.sources[0]
     .uri;
@@ -22,6 +30,7 @@ export default function WeekendContentItem({ item, dropdownData } = {}) {
     src = item.audios?.filter(({ sources }) => sources.length)[0]?.sources[0]
       .uri;
   }
+  console.log(clips);
 
   return (
     <Layout meta={getMetaData(item)} dropdownData={dropdownData}>
@@ -45,15 +54,33 @@ export default function WeekendContentItem({ item, dropdownData } = {}) {
                 height="100%"
                 width="100%"
                 display={'flex'}
-                pl={{ _: '0', lg: '300px' }}
               >
                 {clips?.length ? (
+                  <Styled.SermonSelector>
+                    <Text
+                      mx="xs"
+                      variant="h2"
+                      fontWeight={showing?.clips ? 'bold' : 'normal'}
+                      onClick={() => setShowing({ clips: true, full: false })}
+                    >
+                      Clips
+                    </Text>
+                    <Text
+                      mx="xs"
+                      variant="h2"
+                      fontWeight={showing?.full ? 'bold' : 'normal'}
+                      onClick={() => setShowing({ clips: false, full: true })}
+                    >
+                      Full Message
+                    </Text>
+                  </Styled.SermonSelector>
+                ) : null}
+                {clips?.length && showing?.clips ? (
                   <Carousel
                     display={{ _: 'none', lg: 'inherit' }}
                     width="100%"
                     neighbors="3d"
                     contentWidth={{ _: '100vw', lg: '681px' }}
-                    pl={{ _: '0', lg: '300px' }}
                     onClick={i => setSelectedClip(i)}
                     childProps={i => ({
                       style: {
@@ -74,7 +101,8 @@ export default function WeekendContentItem({ item, dropdownData } = {}) {
                       ) : null
                     )}
                   </Carousel>
-                ) : (
+                ) : null}
+                {showing?.full ? (
                   <Box
                     width={{ _: '100%', lg: '681px' }}
                     px={{ _: 'l', md: 'xxl', lg: 0 }}
@@ -86,37 +114,11 @@ export default function WeekendContentItem({ item, dropdownData } = {}) {
                       style={{ width: '100%' }}
                     />
                   </Box>
-                )}
+                ) : null}
               </Box>
             )
           }
         />
-        {clips?.length ? (
-          <Box
-            flexDirection="column"
-            mx={{ _: 'l', md: 'xxl' }}
-            mt={{ _: 'm', lg: '-130px' }}
-            zIndex="2"
-          >
-            <Heading variant="h5" color="neutrals.500">
-              FULL MESSAGE
-            </Heading>
-            <Styled.SermonContainer mt="s">
-              <Styled.SermonImage
-                rounded
-                src={item.coverImage?.sources?.[0]?.uri}
-                onClick={() => router.push(`/${getSlugFromURL(item.sharing?.url)}`)}
-              />
-              <Box position="absolute" right="10px" bottom="10px">
-                <PlayCircle
-                  size="36"
-                  color={`${theme.colors.neutrals[100]}`}
-                  opacity="60%"
-                />
-              </Box>
-            </Styled.SermonContainer>
-          </Box>
-        ) : null}
       </Box>
       <Section mb="xl">
         <Heading variant="h2" fontWeight="800" mb="m">
@@ -129,20 +131,4 @@ export default function WeekendContentItem({ item, dropdownData } = {}) {
       </Section>
     </Layout>
   );
-
-
-
-
-  return (
-      <Section mb="xl" py={'l'}>
-        <Heading variant="h2" fontWeight="800" mb="m">
-          {item.title}
-        </Heading>
-        <Heading variant="h4" fontWeight="500" mb="m">
-          {item.summary}
-        </Heading>
-      </Section>
-    </Layout>
-  );
-
 }
