@@ -1,6 +1,8 @@
 import Styled from './MetadataCallout.styles';
 import { Heading } from 'ui-kit';
 import { format } from 'date-fns';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 const getDataFn = data => key => {
   const datum = data[key];
@@ -9,6 +11,8 @@ const getDataFn = data => key => {
 };
 
 export default function MetadataCallout({ data }) {
+  const router = useRouter();
+
   const getData = getDataFn(data);
   const getLocationData = getDataFn(getData('location'));
   const metadata = {
@@ -27,6 +31,10 @@ export default function MetadataCallout({ data }) {
     location: [getLocationData('name'), getLocationData('address')]
       .filter(loc => Boolean(loc))
       .join(' '),
+    gps:
+      getLocationData('latitude') && getLocationData('longitude')
+        ? [getLocationData('latitude'), getLocationData('longitude')].join(',')
+        : null,
     contact: [
       getData('contactName'),
       getData('contactEmail'),
@@ -35,6 +43,7 @@ export default function MetadataCallout({ data }) {
       .filter(con => Boolean(con))
       .join(', '),
   };
+
   return (
     <Styled.Callout>
       <Styled.CalloutHeader>
@@ -107,8 +116,25 @@ export default function MetadataCallout({ data }) {
             </Styled.CalloutDetailsListItem>
           )}
           {metadata.location && (
-            <Styled.CalloutDetailsListItem>
-              Location: {metadata.location}
+            <Styled.CalloutDetailsListItem
+              onClick={() => {
+                if (metadata.gps) {
+                  router.push(
+                    `https://www.google.com/maps/place/${metadata.gps}`
+                  );
+                }
+              }}
+            >
+              Location:{' '}
+              {metadata.gps ? (
+                <Link
+                  href={`https://www.google.com/maps/place/${metadata.gps}`}
+                >
+                  {metadata.location}
+                </Link>
+              ) : (
+                `${metadata.location}`
+              )}
             </Styled.CalloutDetailsListItem>
           )}
           {metadata.contact && (
