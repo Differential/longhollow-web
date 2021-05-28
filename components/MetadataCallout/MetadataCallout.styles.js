@@ -46,7 +46,9 @@ Styled.CalloutDetailsList = styled.ul`
 `;
 
 Styled.CalloutDetailsListItem = styled.li`
+  font-size: ${themeGet('fontSizes.h5')};
   font-weight: 600;
+  line-height: ${themeGet('fontSizes.h5')};
   margin: ${themeGet('space.xxs')} 0;
 
   @media screen and (min-width: ${themeGet('breakpoints.lg')}) {

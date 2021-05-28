@@ -1,4 +1,4 @@
-const { default: gql } = require('graphql-tag');
+import gql from 'graphql-tag';
 
 const METADATA_FRAGMENT = gql`
   fragment MetadataFragment on UniversalContentItem {
@@ -23,6 +23,21 @@ const METADATA_FRAGMENT = gql`
     contactName
     contactEmail
     contactPhone
+    featureFeed {
+      features {
+        ... on ButtonFeature {
+          action {
+            title
+            relatedNode {
+              id
+              ... on Url {
+                url
+              }
+            }
+          }
+        }
+      }
+    }
   }
 `;
 

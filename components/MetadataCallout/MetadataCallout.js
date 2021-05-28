@@ -1,5 +1,5 @@
 import Styled from './MetadataCallout.styles';
-import { Heading } from 'ui-kit';
+import { Button, Heading } from 'ui-kit';
 import { format } from 'date-fns';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
@@ -12,6 +12,8 @@ const getDataFn = data => key => {
 
 export default function MetadataCallout({ data }) {
   const router = useRouter();
+
+  const feature = data?.featureFeed?.features?.[0]?.action;
 
   const getData = getDataFn(data);
   const getLocationData = getDataFn(getData('location'));
@@ -142,6 +144,18 @@ export default function MetadataCallout({ data }) {
               Contact: {metadata.contact}
             </Styled.CalloutDetailsListItem>
           )}
+          {feature?.title && feature?.relatedNode?.url ? (
+            <Button
+              mt="l"
+              fontWeight="bold"
+              fontFamily="heading"
+              fontSize="h5"
+              lineHeight="h5"
+              onClick={() => router.push(feature?.relatedNode?.url)}
+            >
+              {feature?.title}
+            </Button>
+          ) : null}
         </Styled.CalloutDetailsList>
       </Styled.CalloutDetails>
     </Styled.Callout>
