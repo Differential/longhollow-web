@@ -39,7 +39,7 @@ export default function WeekendContentItem({ item, dropdownData } = {}) {
             !!(
               (clips.length &&
                 clips.some(clip => clip?.node?.videos?.length)) ||
-              item.videos?.[0]?.sources?.[0]?.uri
+              src
             ) && (
               <Box
                 position={{ lg: 'absolute' }}
