@@ -1,7 +1,5 @@
 import { gql, useQuery } from '@apollo/client';
-import { MEDIA_CONTENT_ITEM_FRAGMENT } from './useMediaContentItem';
 import METADATA_FRAGMENT from './useMetadataFragment';
-import { WEEKEND_CONTENT_ITEM_FRAGMENT } from './useWeekendContentItem';
 
 export const GET_CONTENT_BY_SLUG = gql`
   fragment BaseContentItem on ContentItem {
@@ -28,19 +26,17 @@ export const GET_CONTENT_BY_SLUG = gql`
       }
     }
   }
-  fragment WithChildMedia on ContentItem {
-    videos {
-      sources {
-        uri
-      }
-    }
-  }
   query getContentBySlug($slug: String!) {
     getContentBySlug(slug: $slug) {
       ...BaseContentItem
       ... on WeekendContentItem {
-        ...WithMedia
-        ...WithChildMedia
+        childContentItemsConnection {
+          edges {
+            node {
+              ...WithMedia
+            }
+          }
+        }
       }
       ... on MediaContentItem {
         audios {
@@ -49,7 +45,13 @@ export const GET_CONTENT_BY_SLUG = gql`
           }
         }
         ...WithMedia
-        ...WithChildMedia
+        childContentItemsConnection {
+          edges {
+            node {
+              ...WithMedia
+            }
+          }
+        }
       }
       ... on DevotionalContentItem {
         scriptures {
