@@ -11,7 +11,12 @@ import IDS from 'config/ids';
 import { Box, CardGrid, Heading, Section } from 'ui-kit';
 import { GET_MESSAGE_SERIES } from 'hooks/useMessageSeries';
 import { GET_CONTENT_CHANNEL } from 'hooks/useContentChannel';
-import { getChannelId, getIdSuffix, getSlugFromURL } from 'utils';
+import {
+  getChannelId,
+  getIdSuffix,
+  getMediaSource,
+  getSlugFromURL,
+} from 'utils';
 import useLiveStreams from 'hooks/useLiveStreams';
 import { GET_CONTENT_BY_SLUG } from 'hooks/useContentBySlug';
 
@@ -305,7 +310,7 @@ export async function getStaticProps() {
       watchPages:
         watchRequest?.data?.node?.childContentItemsConnection?.edges || [],
       sermons: sermons?.data?.node?.childContentItemsConnection?.edges.filter(
-        ({ node }) => node?.videos?.[0]?.sources?.[0]?.uri
+        ({ node }) => getMediaSource(node)
       ),
     },
     revalidate: 60, // In seconds

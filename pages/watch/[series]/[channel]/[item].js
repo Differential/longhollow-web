@@ -4,7 +4,13 @@ import { PlayCircle } from 'phosphor-react';
 import { initializeApollo } from 'lib/apolloClient';
 import { useRouter } from 'next/router';
 import { Heading, Section, Box, theme } from 'ui-kit';
-import { getMetaData, getChannelId, getIdSuffix, getSlugFromURL } from 'utils';
+import {
+  getMetaData,
+  getChannelId,
+  getIdSuffix,
+  getSlugFromURL,
+  getMediaSource,
+} from 'utils';
 import IDS from 'config/ids';
 import Styled from 'components/HomeFeed/HomeFeed.styles';
 import { GET_MESSAGE_SERIES } from 'hooks/useMessageSeries';
@@ -12,11 +18,18 @@ import { GET_CONTENT_BY_SLUG } from 'hooks/useContentBySlug';
 
 export default function Item({ item, dropdownData } = {}) {
   const router = useRouter();
+  const [playerError, setPlayerError] = useState(false);
   const [selectedClip, setSelectedClip] = useState(0);
 
   const clips = item?.childContentItemsConnection?.edges || [];
   if (router.isFallback) {
     return null;
+  }
+
+  let src = getMediaSource(item);
+
+  if (!src || playerError) {
+    src = getMediaSource(item, 'audios') || src;
   }
 
   return (
@@ -30,7 +43,7 @@ export default function Item({ item, dropdownData } = {}) {
             !!(
               (clips.length &&
                 clips.some(clip => clip?.node?.videos?.length)) ||
-              item.videos?.[0]?.sources?.[0]?.uri
+              src
             ) && (
               <Box
                 position={{ lg: 'absolute' }}
@@ -58,17 +71,18 @@ export default function Item({ item, dropdownData } = {}) {
                       },
                     })}
                   >
-                    {clips.map(clip =>
-                      clip?.node?.videos?.[0]?.sources?.[0]?.uri || true ? (
+                    {clips.map(clip => {
+                      const clipSrc = getMediaSource(clip.node);
+                      return clipSrc ? (
                         <VideoPlayer
                           key={clip.node?.id}
-                          src={clip.node?.videos?.[0]?.sources?.[0]?.uri}
+                          src={clipSrc}
                           title={clip.node?.title}
                           poster={clip.node?.coverImage?.sources?.[0]?.uri}
                           style={{ width: '681px' }}
                         />
-                      ) : null
-                    )}
+                      ) : null;
+                    })}
                   </Carousel>
                 ) : (
                   <Box
@@ -77,9 +91,10 @@ export default function Item({ item, dropdownData } = {}) {
                   >
                     <VideoPlayer
                       key={item.id}
-                      src={item.videos?.[0]?.sources?.[0]?.uri}
+                      src={src}
                       poster={item.coverImage?.sources?.[0]?.uri}
                       style={{ width: '100%' }}
+                      onError={() => setPlayerError(true)}
                     />
                   </Box>
                 )}

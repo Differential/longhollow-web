@@ -2,7 +2,7 @@ import { Carousel, Layout, MainPhotoHeader } from 'components';
 import { useRouter } from 'next/router';
 import VideoPlayer from 'components/VideoPlayer/VideoJSPlayer';
 import { Heading, Section, Longform, Box, Text } from 'ui-kit';
-import { getMetaData } from 'utils';
+import { getMediaSource, getMetaData } from 'utils';
 import { useState } from 'react';
 import Styled from 'components/HomeFeed/HomeFeed.styles';
 
@@ -21,13 +21,10 @@ export default function WeekendContentItem({ item, dropdownData } = {}) {
     return null;
   }
 
-  let src = item.videos?.filter(({ sources }) => sources.length)[0]?.sources[0]
-    .uri;
+  let src = getMediaSource(item);
 
   if (!src || playerError) {
-    src =
-      item.audios?.filter(({ sources }) => sources.length)[0]?.sources[0].uri ||
-      src;
+    src = getMediaSource(item, 'audios') || src;
   }
 
   return (
@@ -91,18 +88,19 @@ export default function WeekendContentItem({ item, dropdownData } = {}) {
                       },
                     })}
                   >
-                    {clips.map(clip =>
-                      clip?.node?.videos?.[0]?.sources?.[0]?.uri ? (
+                    {clips.map(clip => {
+                      const clipSrc = getMediaSource(clip.node);
+                      return clipSrc ? (
                         <VideoPlayer
                           key={clip.node?.id}
-                          src={clip.node?.videos?.[0]?.sources?.[0]?.uri}
+                          src={clipSrc}
                           title={clip.node?.title}
                           poster={clip.node?.coverImage?.sources?.[0]?.uri}
                           style={{ width: '681px' }}
                           rounded={{ lg: 'image' }}
                         />
-                      ) : null
-                    )}
+                      ) : null;
+                    })}
                   </Carousel>
                 ) : null}
                 {showing?.full ? (
