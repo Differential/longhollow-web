@@ -137,7 +137,6 @@ export async function getStaticProps(context) {
       slug: context.params.item,
     },
   });
-  console.log(itemResponse);
 
   return {
     props: {

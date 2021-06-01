@@ -10,6 +10,7 @@ export default function WeekendContentItem({ item, dropdownData } = {}) {
   const clips = item?.childContentItemsConnection?.edges || [];
 
   const [selectedClip, setSelectedClip] = useState(0);
+  const [playerError, setPlayerError] = useState(false);
   const [showing, setShowing] = useState({
     clips: clips?.length > 0,
     full: !(clips?.length > 0),
@@ -23,9 +24,10 @@ export default function WeekendContentItem({ item, dropdownData } = {}) {
   let src = item.videos?.filter(({ sources }) => sources.length)[0]?.sources[0]
     .uri;
 
-  if (!src) {
-    src = item.audios?.filter(({ sources }) => sources.length)[0]?.sources[0]
-      .uri;
+  if (!src || playerError) {
+    src =
+      item.audios?.filter(({ sources }) => sources.length)[0]?.sources[0].uri ||
+      src;
   }
 
   return (
@@ -107,10 +109,11 @@ export default function WeekendContentItem({ item, dropdownData } = {}) {
                   <Box width={{ _: '100%', lg: '681px' }}>
                     <VideoPlayer
                       key={item.id}
-                      src={item.videos?.[0]?.sources?.[0]?.uri}
+                      src={src}
                       poster={item.coverImage?.sources?.[0]?.uri}
                       style={{ width: '100%' }}
                       rounded={{ lg: 'image' }}
+                      onError={() => setPlayerError(true)}
                     />
                   </Box>
                 ) : null}

@@ -30,6 +30,12 @@ export const GET_CONTENT_BY_SLUG = gql`
     getContentBySlug(slug: $slug) {
       ...BaseContentItem
       ... on WeekendContentItem {
+        ...WithMedia
+        audios {
+          sources {
+            uri
+          }
+        }
         childContentItemsConnection {
           edges {
             node {
