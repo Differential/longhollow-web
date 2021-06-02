@@ -180,11 +180,7 @@ export default function Watch({
                     fontWeight="700"
                     color="primary"
                     cursor="pointer"
-                    onClick={() =>
-                      router.push(
-                        `/watch/${IDS.SERIES.BAPTISMS}/${BAPTISMS_CHANNEL_SLUG}`
-                      )
-                    }
+                    onClick={() => router.push(`/${BAPTISMS_CHANNEL_SLUG}`)}
                   >
                     See More
                   </Heading>
@@ -208,13 +204,7 @@ export default function Watch({
                     height="350px"
                     maxWidth="400px"
                     action={() =>
-                      router.push(
-                        `/watch/${
-                          IDS.SERIES.BAPTISMS
-                        }/${BAPTISMS_CHANNEL_SLUG}/${getSlugFromURL(
-                          node?.sharing?.url
-                        )}`
-                      )
+                      router.push(`/${getSlugFromURL(node?.sharing?.url)}`)
                     }
                   />
                 ))}
@@ -249,7 +239,7 @@ export default function Watch({
                     onClick: () =>
                       router.push(
                         page.buttonLink ||
-                          `/watch/page/${getSlugFromURL(page?.sharing?.url)}`
+                          `/${getSlugFromURL(page?.sharing?.url)}`
                       ),
                   },
                 ]}

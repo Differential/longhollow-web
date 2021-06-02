@@ -36,7 +36,7 @@ export default function WeekendContentItem({ item, dropdownData } = {}) {
           overlay=""
           content={
             !!(
-              (clips.length &&
+              (clips?.length &&
                 clips.some(clip => clip?.node?.videos?.length)) ||
               src
             ) && (

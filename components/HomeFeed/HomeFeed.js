@@ -40,7 +40,7 @@ function FullLengthSermon(props = {}) {
         backdrop={false}
         content={
           !!(
-            (clips.length && clips.any(clip => clip?.node?.videos?.length)) ||
+            (clips?.length && clips.any(clip => clip?.node?.videos?.length)) ||
             src
           ) && (
             <Box
