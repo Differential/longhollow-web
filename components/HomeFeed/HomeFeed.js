@@ -253,8 +253,12 @@ function HomeFeedContent(props = {}) {
   const router = useRouter();
   const theme = useTheme();
 
-  const largeArticle = props.articles?.[0]?.node;
-  const miniArticles = props.articles?.slice(1, 3);
+  const articles = [...(props.events || []), ...(props.articles || [])];
+
+  const largeArticle = articles.find(article => article.featureOnHomePage);
+  const miniArticles = articles
+    .filter(article => !article.featureOnHomePage && article.showOnHomePage)
+    .slice(1, 3);
 
   // Fixes a very strange static generation error I was running into.
   // In effect - when this page was rendered for an authed user
