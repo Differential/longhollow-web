@@ -45,6 +45,7 @@ export const getMetadataObj = data => {
     finePrint: getData('finePrint'),
     cost: getData('cost'),
     tripType: getData('tripType'),
+    registrationClosedInstructions: getData('registrationClosedInstructions'),
   };
 };
 
@@ -239,14 +240,14 @@ export default function MetadataCallout({ data }) {
               {feature?.title}
             </Button>
           ) : null}
-          {expired && (
+          {expired && metadata.registrationClosedInstructions (
             <Text
               variant="base"
               color="neutrals.400"
               mt="xs"
               textAlign="center"
             >
-              Go to the front desk to sign up.
+              {metadata.registrationClosedInstructions}
             </Text>
           )}
           {metadata.finePrint && (
