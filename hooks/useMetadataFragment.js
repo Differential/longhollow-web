@@ -26,7 +26,7 @@ const METADATA_FRAGMENT = gql`
     contactPhone
     cost
     tripType
-    registrationClosedInstructions
+    closedInstructions
     featureFeed {
       features {
         ... on ButtonFeature {
