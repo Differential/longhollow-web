@@ -13,7 +13,7 @@ function Hit(props) {
       text={props.hit.title}
       color="white"
       width={{ sm: '300px' }}
-      height="225px"
+      height={{ sm: "225px" }}
       m="xs"
       size="m"
     />
