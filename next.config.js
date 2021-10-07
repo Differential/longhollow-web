@@ -227,8 +227,7 @@ module.exports = {
       { source: '/events/lh-kids-baptism-classes', destination: '/kids-baptism-classes', permanent: true },
       { source: '/events/supporting-those-who-struggle-event', destination: '/supporting-those-who-struggle-event', permanent: true },
       { source: '/events/light-up-the-pike', destination: 'https://lightupthepike.com', permanent: true },
-      { source: '/notes', destination: 'http://bible.com/events/48772378', permanent: true },
-      { source: '/watch/c9e92fca115eee4b50f2428f86c140a9/baptisms', destination: '/baptisms', permanent: true, }
+      { source: '/notes', destination: 'http://bible.com/events/48772378', permanent: true }
     ];
   },
 };
