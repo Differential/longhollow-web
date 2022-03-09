@@ -204,9 +204,48 @@ function HomeFeedArticles({ articles }) {
   );
 }
 
-function HomeFeedCTA({ authenticated }) {
+function HomeFeedCTA({ authenticated, personaFeed }) {
   const router = useRouter();
-  return authenticated ? (
+  return personaFeed?.length ? (
+    <Section>
+      <CardGrid columns="1">
+        {personaFeed.map(({ relatedNode }, i) => (
+          <MarketingHeadline
+            key={relatedNode.id}
+            image={{
+              src: relatedNode.coverImage?.sources?.[0]?.uri,
+              onClick: relatedNode.linkText
+                ? null
+                : () => {
+                    router.push(
+                      relatedNode.linkURL ||
+                        `/${getSlugFromURL(relatedNode?.sharing?.url)}`
+                    );
+                  },
+            }}
+            justify={i % 2 === 0 ? 'left' : 'right'}
+            title={relatedNode.title}
+            description={relatedNode.summaryHTML}
+            actions={
+              relatedNode.linkText
+                ? [
+                    {
+                      label: relatedNode.linkText,
+                      onClick: () => {
+                        router.push(
+                          relatedNode.linkURL ||
+                            `/${getSlugFromURL(relatedNode?.sharing?.url)}`
+                        );
+                      },
+                    },
+                  ]
+                : []
+            }
+          />
+        ))}
+      </CardGrid>
+    </Section>
+  ) : authenticated ? (
     <MarketingHeadline
       image={{
         src: '/watch.jpeg',
@@ -287,6 +326,7 @@ function HomeFeedContent(props = {}) {
   const theme = useTheme();
 
   const articles = props.articles || [];
+  const personaFeed = props.personaFeed || [];
 
   const largeArticle = articles.find(article => article?.featureOnHomePage);
   const miniArticles = articles
@@ -322,7 +362,10 @@ function HomeFeedContent(props = {}) {
       ) : null}
       <Section>
         <Box mb={{ _: 'l', md: 'xxl' }}>
-          <HomeFeedCTA authenticated={props.authenticated} />
+          <HomeFeedCTA
+            personaFeed={personaFeed}
+            authenticated={props.authenticated}
+          />
         </Box>
       </Section>
       <FullWidthCTA mt={{ xl: '-150px' }} py="xxl" justifyContent="flex-start">
@@ -384,14 +427,11 @@ function HomeFeedContent(props = {}) {
 
 function HomeFeed(props = {}) {
   const { authenticated } = useCurrentUser();
-  const { articles: personaArticles } = usePersonaFeed({
+  const { personaFeed } = usePersonaFeed({
     skip: !authenticated,
   });
 
-  let articles = [];
-
-  if (authenticated) articles = personaArticles || [];
-  articles = [...articles, ...(props.articles || []), ...(props.events || [])];
+  let articles = [...(props.articles || []), ...(props.events || [])];
 
   articles = articles.map(({ node }) => node);
   articles = uniq(articles, ({ id } = {}) => id);
@@ -403,6 +443,7 @@ function HomeFeed(props = {}) {
         {...props}
         articles={articles}
         authenticated={authenticated}
+        personaFeed={personaFeed}
       />
     </>
   );
