@@ -32,6 +32,8 @@ module.exports = {
         destination: '/:slug',
         permanent: false,
       }, //fixing mvmnt
+      { source: '/everyday', destination: '/get-the-everyday-life-podcast', permanent: true },
+      { source: '/checkin', destination: '/how-to-check-in-for-kids-activities', permanent: true },
       { source: '/calling', destination: '/discover-your-calling', permanent: true },
       { source: '/camp', destination: 'https://longhollow.com/student-camp-2022', permanent: true },
       { source: '/secretchurch', destination: 'https://longhollow.com/secret-church', permanent: true },
@@ -186,14 +188,14 @@ module.exports = {
       { source: '/replicate', destination: 'https://replicate.org/', permanent: true },
       { source: '/bylaws', destination: '/about/beliefs', permanent: true },
       { source: '/divorcecare', destination: '/divorce-care', permanent: true },
-      { source: '/offering', destination: '/fall-offering-and-the-legacy-park-project', permanent: true },
+      { source: '/offering', destination: '/make-a-difference-through-this-years-easter-offering', permanent: true },
       { source: '/ministryplan', destination: '/the-2022-ministry-plan', permanent: true },
       { source: '/griefshare', destination: '/grief-share', permanent: true },
       { source: '/food', destination: '/next-steps/get-involved-with-missions', permanent: true },
       { source: '/foodpantry', destination: '/connect/connect-with-us', permanent: true },
       { source: '/baby', destination: '/connect/kids', permanent: true },
       { source: '/seniors', destination: '/', permanent: true },
-      { source: '/easter', destination: '/', permanent: true },
+      { source: '/easter', destination: '/come-celebrate-with-us-this-easter', permanent: true },
       { source: '/lhkids', destination: '/connect/kids', permanent: true },
       { source: '/christmas', destination: '/christmas-at-long-hollow', permanent: true },
       { source: '/schedule', destination: '/about/schedule', permanent: true },
@@ -247,7 +249,7 @@ module.exports = {
       { source: '/events/lh-kids-baptism-classes', destination: '/kids-baptism-classes', permanent: true },
       { source: '/events/supporting-those-who-struggle-event', destination: '/supporting-those-who-struggle-event', permanent: true },
       { source: '/events/light-up-the-pike', destination: 'https://lightupthepike.com', permanent: true },
-      { source: '/notes', destination: 'http://bible.com/events/48853036', permanent: true }
+      { source: '/notes', destination: 'http://bible.com/events/48867972', permanent: true }
     ];
   },
 };
