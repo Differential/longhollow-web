@@ -32,6 +32,7 @@ module.exports = {
         destination: '/:slug',
         permanent: false,
       }, //fixing mvmnt
+      { source: '/compassionvolunteer', destination: 'https://my.longhollow.com/Registration/compassion-vol-2022', permanent: true },
       { source: '/everyday', destination: '/get-the-everyday-life-podcast', permanent: true },
       { source: '/checkin', destination: '/how-to-check-in-for-kids-activities', permanent: true },
       { source: '/calling', destination: '/discover-your-calling', permanent: true },
@@ -249,7 +250,7 @@ module.exports = {
       { source: '/events/lh-kids-baptism-classes', destination: '/kids-baptism-classes', permanent: true },
       { source: '/events/supporting-those-who-struggle-event', destination: '/supporting-those-who-struggle-event', permanent: true },
       { source: '/events/light-up-the-pike', destination: 'https://lightupthepike.com', permanent: true },
-      { source: '/notes', destination: 'http://bible.com/events/48867972', permanent: true }
+      { source: '/notes', destination: 'http://bible.com/events/48871801', permanent: true }
     ];
   },
 };
