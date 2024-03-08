@@ -18,6 +18,12 @@ export const GET_LIVE_STREAMS = gql`
         id
         ... on UniversalContentItem {
           title
+          summary
+          coverImage {
+            sources {
+              uri
+            }
+          }
         }
       }
     }
