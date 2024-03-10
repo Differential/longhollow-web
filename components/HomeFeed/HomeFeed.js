@@ -30,6 +30,7 @@ function FullLengthSermon(props = {}) {
   const { liveStreams } = useLiveStreams();
   const liveContent = liveStreams?.[0]?.contentItem;
   const livestreamUrl = liveStreams?.[0]?.webViewUrl;
+  console.log('liveContent', liveContent);
 
   const clips =
     props.sermon?.childContentItemsConnection?.edges
