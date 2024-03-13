@@ -17,7 +17,7 @@ import { useRouter } from 'next/router';
 import { ArrowRight, PlayCircle } from 'phosphor-react';
 import React, { useState } from 'react';
 import { useTheme } from 'styled-components';
-import { Box, CardGrid, Heading, Section, Text, Image } from 'ui-kit';
+import { Box, CardGrid, Heading, Section, Text } from 'ui-kit';
 import { getMediaSource, getSlugFromURL } from 'utils';
 import Styled from './HomeFeed.styles';
 import useLiveStreams from 'hooks/useLiveStreams';
@@ -30,7 +30,7 @@ function FullLengthSermon(props = {}) {
   const { liveStreams } = useLiveStreams();
   const liveContent = liveStreams?.[0]?.contentItem;
   const livestreamUrl = liveStreams?.[0]?.webViewUrl;
-  console.log('liveContent', liveContent);
+  const LIVE = !!liveStreams?.[0]?.isLive;
 
   const clips =
     props.sermon?.childContentItemsConnection?.edges
@@ -40,6 +40,7 @@ function FullLengthSermon(props = {}) {
         mediaSource: getMediaSource(clip) || getMediaSource(clip, 'audios'),
       }))
       .filter(({ mediaSource }) => mediaSource) || [];
+  const CLIPS = !!clips?.length;
 
   let sermonSource = getMediaSource(props.sermon);
   if (!sermonSource) {
@@ -50,9 +51,6 @@ function FullLengthSermon(props = {}) {
     props.sermon?.seriesBackgroundImage?.sources?.[0].uri ||
     props.sermon?.seriesImage?.sources?.[0].uri ||
     'schedule.jpeg';
-
-  const LIVE = !!liveStreams?.[0]?.isLive;
-  const CLIPS = !!clips?.length;
 
   const hasContent = Boolean(clips.length || sermonSource || liveContent);
 
@@ -135,6 +133,7 @@ function FullLengthSermon(props = {}) {
                         color="white"
                         text={'Join us live!'}
                         action={() => router.push(livestreamUrl)}
+                        rounded={false}
                       />
                     </Box>
                   ) : (

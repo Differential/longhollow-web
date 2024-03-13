@@ -45,6 +45,7 @@ function LargeImage({
   size = 'l',
   subtext,
   height,
+  rounded = true,
   ...props
 } = {}) {
   const dropShadow = _dropShadow !== false;
@@ -70,12 +71,20 @@ function LargeImage({
   const staticHeight = !!height && typeof height !== 'string';
 
   return (
-    <Styled onClick={action ? action : null} height={height} {...props} backgroundSrc={src}>
-      <StyledImage staticHeight={staticHeight} src={src} rounded dropShadow={dropShadow} />
-      <TextContainer
+    <Styled
+      onClick={action ? action : null}
+      height={height}
+      rounded={rounded}
+      {...props}
+      backgroundSrc={src}
+    >
+      <StyledImage
         staticHeight={staticHeight}
-        padding={textPadding}
-      >
+        src={src}
+        rounded={rounded}
+        dropShadow={dropShadow}
+      />
+      <TextContainer staticHeight={staticHeight} padding={textPadding}>
         {text && (
           <Heading
             color={color}
@@ -85,6 +94,7 @@ function LargeImage({
             display="flex"
             justifyContent="space-between"
             width="100%"
+            rounded={rounded}
           >
             <span style={{ marginRight: '36px' }}>{text}</span>
             {action && (
