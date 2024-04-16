@@ -29,8 +29,12 @@ function FullLengthSermon(props = {}) {
 
   const { liveStreams } = useLiveStreams();
   const liveContent = liveStreams?.[0]?.contentItem;
+  // for debug
+  //const liveContent = props.sermon;
   const livestreamUrl = liveStreams?.[0]?.webViewUrl;
   const LIVE = !!liveStreams?.[0]?.isLive;
+  // for debug
+  //const LIVE = true;
 
   const clips =
     props.sermon?.childContentItemsConnection?.edges
@@ -48,6 +52,7 @@ function FullLengthSermon(props = {}) {
   }
 
   const mainPhoto =
+    (LIVE && liveContent?.parentItem?.coverImage?.sources?.[0]?.uri) ||
     props.sermon?.seriesBackgroundImage?.sources?.[0].uri ||
     props.sermon?.seriesImage?.sources?.[0].uri ||
     'schedule.jpeg';
@@ -129,6 +134,8 @@ function FullLengthSermon(props = {}) {
                     <Box>
                       <LargeImage
                         width="100%"
+                        //height="98vh"
+                        constantHeight
                         src={liveContent?.coverImage?.sources?.[0]?.uri}
                         color="white"
                         text={'Join us live!'}
@@ -139,8 +146,12 @@ function FullLengthSermon(props = {}) {
                   ) : (
                     <VideoPlayer
                       key={props.sermon?.id}
-                      src={sermonSource}
-                      poster={props.sermon?.coverImage?.sources?.[0]?.uri}
+                      src={!LIVE ? sermonSource : ''}
+                      poster={
+                        !LIVE
+                          ? props.sermon?.coverImage?.sources?.[0]?.uri
+                          : liveContent?.coverImage?.sources?.[0]?.uri
+                      }
                       style={{ width: '100%' }}
                     />
                   )}

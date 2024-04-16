@@ -24,6 +24,14 @@ export const GET_LIVE_STREAMS = gql`
               uri
             }
           }
+          parentItem {
+            id
+            coverImage {
+              sources {
+                uri
+              }
+            }
+          }
         }
       }
     }

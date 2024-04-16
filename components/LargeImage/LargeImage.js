@@ -46,6 +46,7 @@ function LargeImage({
   subtext,
   height,
   rounded = true,
+  constantHeight = false,
   ...props
 } = {}) {
   const dropShadow = _dropShadow !== false;
@@ -68,7 +69,8 @@ function LargeImage({
   }
 
   const { textPadding, fontSize, lineHeight, iconSize } = textSizing;
-  const staticHeight = !!height && typeof height !== 'string';
+  const staticHeight =
+    constantHeight || (!!height && typeof height !== 'string');
 
   return (
     <Styled
