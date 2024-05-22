@@ -29,12 +29,8 @@ function FullLengthSermon(props = {}) {
 
   const { liveStreams } = useLiveStreams();
   const liveContent = liveStreams?.[0]?.contentItem;
-  // for debug
-  //const liveContent = props.sermon;
   const livestreamUrl = liveStreams?.[0]?.webViewUrl;
   const LIVE = !!liveStreams?.[0]?.isLive;
-  // for debug
-  //const LIVE = true;
 
   const clips =
     props.sermon?.childContentItemsConnection?.edges
@@ -52,6 +48,7 @@ function FullLengthSermon(props = {}) {
   }
 
   const mainPhoto =
+    // TODO this parentItem image is not valid. not sure where we should get the image from
     (LIVE && liveContent?.parentItem?.coverImage?.sources?.[0]?.uri) ||
     props.sermon?.seriesBackgroundImage?.sources?.[0].uri ||
     props.sermon?.seriesImage?.sources?.[0].uri ||

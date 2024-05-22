@@ -16,20 +16,12 @@ export const GET_LIVE_STREAMS = gql`
       webViewUrl
       contentItem {
         id
-        ... on WeekendContentItem {
+        ... on UniversalContentItem {
           title
           summary
           coverImage {
             sources {
               uri
-            }
-          }
-          parentItem {
-            id
-            coverImage {
-              sources {
-                uri
-              }
             }
           }
         }
