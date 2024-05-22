@@ -47,9 +47,13 @@ function FullLengthSermon(props = {}) {
     sermonSource = getMediaSource(props.sermon, 'audios');
   }
 
+  const liveContentImages = liveContent?.images || [];
+  const liveBackgroundImage = liveContentImages?.find(
+    image =>
+      image?.sources?.[0]?.uri !== liveContent?.coverImage?.sources?.[0]?.uri
+  );
   const mainPhoto =
-    // TODO this parentItem image is not valid. not sure where we should get the image from
-    (LIVE && liveContent?.parentItem?.coverImage?.sources?.[0]?.uri) ||
+    (LIVE && liveBackgroundImage?.sources?.[0]?.uri) ||
     props.sermon?.seriesBackgroundImage?.sources?.[0].uri ||
     props.sermon?.seriesImage?.sources?.[0].uri ||
     'schedule.jpeg';
