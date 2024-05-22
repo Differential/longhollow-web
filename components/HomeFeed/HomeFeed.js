@@ -135,6 +135,7 @@ function FullLengthSermon(props = {}) {
                     <Box>
                       <LargeImage
                         width="100%"
+                        height={{ _: 'calc(100vw * 0.5625)', lg: '100%' }}
                         constantHeight
                         src={liveContent?.coverImage?.sources?.[0]?.uri}
                         color="white"
