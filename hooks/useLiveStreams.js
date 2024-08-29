@@ -38,6 +38,7 @@ export const GET_LIVE_STREAMS = gql`
 function useLiveStreams(options = {}) {
   const query = useQuery(GET_LIVE_STREAMS, {
     ...options,
+    pollInterval: 60000,
     cachePolicy: 'network-only',
   });
   const firstStream = query?.data?.liveStreams?.[0];
