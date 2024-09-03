@@ -48,7 +48,7 @@ function ArticleLink({
           {splitString(description)}
         </Text>
         {url && urlText ? (
-          <Link legacyBehavior legacyBehavior href={url}>
+          <Link legacyBehavior href={url}>
             <a
               style={{
                 display: 'flex',
