@@ -40,6 +40,7 @@ function useLiveStreams(options = {}) {
     ...options,
     cachePolicy: 'network-only',
     errorPolicy: 'ignore',
+    ssr: false,
   });
   const firstStream = query?.data?.liveStreams?.[0];
   let prettyCountdown;
