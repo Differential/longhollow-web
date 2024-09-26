@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.2.5",
+    "@sentry/nextjs": "^8",
     "@storybook/cli": "^6.1.11",
     "@styled-system/theme-get": "^5.1.2",
     "algoliasearch": "^4.9.0",
