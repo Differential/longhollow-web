@@ -40,6 +40,7 @@ function useLiveStreams(options = {}) {
   const query = useQuery(GET_LIVE_STREAMS, {
     ...options,
     cachePolicy: 'network-only',
+    errorPolicy: 'ignore',
   });
   Sentry.captureMessage(`useLiveStreams: ${JSON.stringify(query?.data)}`);
   const firstStream = query?.data?.liveStreams?.[0];
