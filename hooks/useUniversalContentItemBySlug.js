@@ -26,7 +26,7 @@ export const GET_UNIVERSAL_CONTENT_ITEM_BY_SLUG = gql`
         ministry
         secondaryHTML
         redirectURL
-        childContentItemsConnection(orderBy: { field: DATE, direction: DESC }) {
+        childContentItemsConnection(orderBy: { field: DATE, direction: ASC }) {
           edges {
             node {
               ...BaseContentItem
