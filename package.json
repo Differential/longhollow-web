@@ -14,7 +14,7 @@
     "test": "jest --watch"
   },
   "dependencies": {
-    "@apollo/client": "^3.2.5",
+    "@apollo/client": "^3.14.0",
     "@styled-system/theme-get": "^5.1.2",
     "algoliasearch": "^4.9.0",
     "apollo3-cache-persist": "^0.8.0",
@@ -29,7 +29,7 @@
     "prop-types": "^15.7.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-instantsearch-dom": "^6.10.3",
+    "react-instantsearch-dom": "^6.40.4",
     "react-is": "^17.0.1",
     "styled-components": "^5.2.1",
     "styled-system": "^5.1.5"
