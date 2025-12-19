@@ -37,8 +37,6 @@ function App({ Component, pageProps = {}, dropdownData }) {
           content="app-id=com.longhollow.churchapp"
         />*/}
         <link rel="icon" href="/favicon.png" />
-        <link rel="stylesheet" type="text/css" href="/nprogress.css" />
-        <link rel="stylesheet" type="text/css" href="/font-awesome.css" />
       </Head>
       <AppProvider initialApolloState={initialApolloState}>
         {pageProps.error ? (

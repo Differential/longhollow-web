@@ -48,31 +48,30 @@ function ArticleLink({
           {splitString(description)}
         </Text>
         {url && urlText ? (
-          <Link legacyBehavior href={url}>
-            <a
-              style={{
-                display: 'flex',
-                textDecoration: 'none',
-                alignItems: 'center',
-                marginTop: theme.space.xxs,
-              }}
+          <Link
+            href={url}
+            style={{
+              display: 'flex',
+              textDecoration: 'none',
+              alignItems: 'center',
+              marginTop: theme.space.xxs,
+            }}
+          >
+            <Text
+              fontWeight="600"
+              variant="s"
+              color={color}
+              mr="4px"
+              style={{ whiteSpace: 'nowrap' }}
             >
-              <Text
-                fontWeight="600"
-                variant="s"
-                color={color}
-                mr="4px"
-                style={{ whiteSpace: 'nowrap' }}
-              >
-                {urlText}
-              </Text>
-              <ArrowRight
-                alt={title}
-                weight="bold"
-                size={18}
-                color={theme.colors[color]}
-              />
-            </a>
+              {urlText}
+            </Text>
+            <ArrowRight
+              alt={title}
+              weight="bold"
+              size={18}
+              color={theme.colors[color]}
+            />
           </Link>
         ) : null}
       </Styled.TextContainer>

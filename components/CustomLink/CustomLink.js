@@ -2,24 +2,22 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 
-function CustomLink({ Component: _Component, href, ...props }) {
+function CustomLink({ Component: _Component, href, children, ...props }) {
   if (!_Component) {
-    return (
-      <Link legacyBehavior href={href}>
-        <a>{props.children}</a>
-      </Link>
-    );
+    return <Link href={href}>{children}</Link>;
   }
 
   return (
-    <Link href={href} passHref>
-      <WrappedComponent Component={_Component} {...props} />
+    <Link href={href}>
+      <WrappedComponent Component={_Component} href={href} {...props}>
+        {children}
+      </WrappedComponent>
     </Link>
   );
 }
 
 const WrappedComponent = React.forwardRef(({ Component, ...props }, ref) => (
-  <Component {...props} />
+  <Component ref={ref} {...props} />
 ));
 
 CustomLink.propTypes = {

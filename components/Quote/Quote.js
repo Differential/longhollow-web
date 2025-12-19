@@ -78,24 +78,23 @@ function Quote({
                   </Text>
                 )}
                 {actionLink && (
-                  <Link legacyBehavior href={actionLink}>
-                    <a
-                      style={{
-                        display: 'flex',
-                        textDecoration: 'none',
-                        alignItems: 'center',
-                      }}
-                    >
-                      <Text fontWeight="600" variant="s" color={color} mr="4px">
-                        {actionLabel}
-                      </Text>
-                      <ArrowRight
-                        alt={actionLabel}
-                        weight="bold"
-                        size={18}
-                        color={theme.colors[color]}
-                      />
-                    </a>
+                  <Link
+                    href={actionLink}
+                    style={{
+                      display: 'flex',
+                      textDecoration: 'none',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <Text fontWeight="600" variant="s" color={color} mr="4px">
+                      {actionLabel}
+                    </Text>
+                    <ArrowRight
+                      alt={actionLabel}
+                      weight="bold"
+                      size={18}
+                      color={theme.colors[color]}
+                    />
                   </Link>
                 )}
               </Box>
