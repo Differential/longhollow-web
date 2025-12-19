@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom/extend-expect';
+require('@testing-library/jest-dom');
 
 process.env = {
   ...process.env,
