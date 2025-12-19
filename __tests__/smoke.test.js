@@ -40,6 +40,11 @@ function createMockClient() {
             },
           };
           break;
+        case 'getFeedFeatures':
+          data = {
+            userFeedFeatures: [],
+          };
+          break;
         case 'getLiveStreams':
           data = {
             liveStreams: [],
