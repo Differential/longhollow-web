@@ -1,6 +1,6 @@
 # longhollow-web
 
-Next.js 13 app using the `pages` router, plus Jest.
+Next.js 16 app using the `pages` router, plus Jest.
 
 ## Requirements
 
