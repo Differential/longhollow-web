@@ -4,6 +4,9 @@ afterAll(() => {
   if (typeof global.__restoreConsoleError === 'function') {
     global.__restoreConsoleError();
   }
+  if (typeof global.__restoreConsoleWarn === 'function') {
+    global.__restoreConsoleWarn();
+  }
 });
 
 process.env = {
