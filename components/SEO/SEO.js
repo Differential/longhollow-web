@@ -18,6 +18,7 @@ function SEO(props = {}) {
   const router = useRouter();
   const title = getPageTitle(props.meta.title || props.title);
   const url = `https://longhollow.com${router.asPath}`;
+  const gaCode = process.env.NEXT_PUBLIC_GA_CODE || 'UA-581344-3';
 
   useEffect(() => {
     let gtagValid = true;
@@ -27,15 +28,6 @@ function SEO(props = {}) {
       typeof window === 'undefined' || typeof document === 'undefined';
 
     if (_isNotBrowser) return null;
-
-    // NEXT_PUBLIC_GA_CODE  needs to be set in the .env
-    if (!process.env.NEXT_PUBLIC_GA_CODE) {
-      console.warn(
-        'GoogleAnalytics tracking code is required to initialize GoogleAnalytics'
-      );
-
-      gtagValid = false;
-    }
 
     if (!window.gtag) {
       console.warn(
@@ -82,12 +74,11 @@ function SEO(props = {}) {
         content="width=device-width, initial-scale=1, shrink-to-fit=no"
       />
       {/* Global site tag (gtag.js) - Google Analytics */}
-      {process.env.NODE_ENV === 'production' &&
-      process.env.NEXT_PUBLIC_GA_CODE ? (
+      {process.env.NODE_ENV === 'production' && gaCode ? (
         <>
           <script
             async
-            src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_CODE}`}
+            src={`https://www.googletagmanager.com/gtag/js?id=${gaCode}`}
           />
           <script
             // eslint-disable-next-line react/no-danger
@@ -96,7 +87,7 @@ function SEO(props = {}) {
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', '${process.env.NEXT_PUBLIC_GA_CODE}', {
+    gtag('config', '${gaCode}', {
       page_path: window.location.pathname,
     });
   `,
