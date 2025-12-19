@@ -1,6 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import { act } from 'react-dom/test-utils';
+import { render, waitFor } from '@testing-library/react';
 import {
   ApolloClient,
   ApolloLink,
@@ -74,24 +73,22 @@ function createMockClient() {
 }
 
 describe('App', () => {
-  it('renders without crashing', () => {
+  it('renders without crashing', async () => {
     const client = createMockClient();
-    let getByText;
+    const { getByText } = render(
+      <ApolloProvider client={client}>
+        <ThemeProvider>
+          <AuthProvider>
+            <ModalProvider>
+              <App />
+            </ModalProvider>
+          </AuthProvider>
+        </ThemeProvider>
+      </ApolloProvider>
+    );
 
-    act(() => {
-      ({ getByText } = render(
-        <ApolloProvider client={client}>
-          <ThemeProvider>
-            <AuthProvider>
-              <ModalProvider>
-                <App />
-              </ModalProvider>
-            </AuthProvider>
-          </ThemeProvider>
-        </ApolloProvider>
-      ));
+    await waitFor(() => {
+      expect(getByText(/take your next step/i)).toBeInTheDocument();
     });
-
-    expect(getByText(/take your next step/i)).toBeInTheDocument();
   });
 });
