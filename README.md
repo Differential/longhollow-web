@@ -1,6 +1,6 @@
 # longhollow-web
 
-Next.js 13 app using the `pages` router, plus Storybook and Jest.
+Next.js 13 app using the `pages` router, plus Jest.
 
 ## Requirements
 
@@ -26,14 +26,6 @@ yarn lint         # ESLint
 yarn format       # Prettier (writes files)
 yarn test         # Jest in watch mode
 ```
-
-## Storybook
-
-```bash
-yarn storybook
-```
-
-Storybook runs on `http://localhost:6006`.
 
 ## Project layout
 
