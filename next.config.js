@@ -2,9 +2,6 @@ module.exports = {
   images: {
     domains: [],
   },
-  experimental: {
-    cpus: 1,
-  },
   compiler: {
     styledComponents: true,
   },
