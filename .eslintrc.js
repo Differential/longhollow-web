@@ -1,9 +1,6 @@
 module.exports = {
-  globals: {
-    __PATH_PREFIX__: true,
-  },
   env: {
     jest: true,
   },
-  extends: 'react-app',
+  extends: ['next/core-web-vitals'],
 };
