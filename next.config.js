@@ -5,6 +5,9 @@ module.exports = {
   experimental: {
     cpus: 1,
   },
+  compiler: {
+    styledComponents: true,
+  },
   async headers() {
     return [
       {
