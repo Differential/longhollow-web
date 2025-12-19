@@ -10,7 +10,7 @@
     "build": "next build",
     "start": "next start",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
-    "lint": "next lint",
+    "lint": "eslint .",
     "test": "jest --watch"
   },
   "dependencies": {
