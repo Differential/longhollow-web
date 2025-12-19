@@ -2,9 +2,6 @@ module.exports = {
   images: {
     domains: [],
   },
-  env: {
-    BASE_URL: process.env.REACT_APP_BASE_URL,
-  },
   experimental: {
     cpus: 1,
   },
