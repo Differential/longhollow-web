@@ -5,13 +5,13 @@ Next.js 13 app using the `pages` router, plus Jest.
 ## Requirements
 
 - Node.js 20 (see `package.json` engine)
-- Yarn (classic)
+- npm (bundled with Node.js)
 
 ## Quick start
 
 ```bash
-yarn
-yarn dev
+npm install --legacy-peer-deps
+npm run dev
 ```
 
 Open `http://localhost:3000`.
@@ -19,12 +19,12 @@ Open `http://localhost:3000`.
 ## Common scripts
 
 ```bash
-yarn dev          # Start the Next.js dev server
-yarn build        # Production build
-yarn start        # Run the production server
-yarn lint         # ESLint
-yarn format       # Prettier (writes files)
-yarn test         # Jest in watch mode
+npm run dev          # Start the Next.js dev server
+npm run build        # Production build
+npm run start        # Run the production server
+npm run lint         # ESLint
+npm run format       # Prettier (writes files)
+npm run test         # Jest in watch mode
 ```
 
 ## Project layout
