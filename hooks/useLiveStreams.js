@@ -38,7 +38,7 @@ export const GET_LIVE_STREAMS = gql`
 function useLiveStreams(options = {}) {
   const query = useQuery(GET_LIVE_STREAMS, {
     ...options,
-    cachePolicy: 'network-only',
+    fetchPolicy: 'network-only',
     errorPolicy: 'ignore',
   });
   const firstStream = query?.data?.liveStreams?.[0];

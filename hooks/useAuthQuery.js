@@ -10,10 +10,6 @@ const useAuthQuery = (query, options = {}) => {
     useQuery(query, {
       skip: !authenticated,
       fetchPolicy: 'network-only',
-      onError: () => {
-        console.error('Authentication error: logging out...');
-        dispatch(logout());
-      },
       ...options,
     }) || {};
 
@@ -30,6 +26,12 @@ const useAuthQuery = (query, options = {}) => {
       refetch()?.catch(() => console.error('Authentication error'));
     }
   }, [authenticated, token, refetch]);
+
+  useEffect(() => {
+    if (!error) return;
+    console.error('Authentication error: logging out...');
+    dispatch(logout());
+  }, [error, dispatch]);
 
   return {
     data,

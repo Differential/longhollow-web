@@ -16,3 +16,9 @@ process.env = {
     loader: 'default',
   },
 };
+
+process.env.NEXT_PUBLIC_GA_CODE = process.env.NEXT_PUBLIC_GA_CODE || 'test-ga';
+
+if (typeof window !== 'undefined') {
+  window.gtag = window.gtag || jest.fn();
+}
