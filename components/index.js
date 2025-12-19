@@ -28,7 +28,6 @@ import Quote from './Quote';
 import Search from './Search';
 import SEO from './SEO';
 import UserProfile from './UserProfile';
-import ValuesRow from './ValuesRow';
 import VideoPlayer from './VideoPlayer';
 import { EventsCallout, EventCallout } from './EventCallout';
 import ConnectTiles from './ConnectTiles';
@@ -69,7 +68,6 @@ export {
   Search,
   SEO,
   UserProfile,
-  ValuesRow,
   VideoPlayer,
   ConnectTiles,
 };
