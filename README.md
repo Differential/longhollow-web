@@ -10,7 +10,7 @@ Next.js 13 app using the `pages` router, plus Jest.
 ## Quick start
 
 ```bash
-npm install --legacy-peer-deps
+npm install
 npm run dev
 ```
 
