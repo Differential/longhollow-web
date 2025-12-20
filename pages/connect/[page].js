@@ -14,7 +14,7 @@ import { GET_CONTENT_CHANNEL } from 'hooks/useContentChannel';
 // import { GET_STAFF } from 'hooks/useStaff';
 import { GET_MINISTRY_CONTENT } from 'hooks/useMinistryContent';
 import { GET_UNIVERSAL_CONTENT_ITEM_BY_SLUG } from 'hooks/useUniversalContentItemBySlug';
-import { initializeApollo } from 'lib/apolloClient';
+import { initializeApollo, safeQuery } from 'lib/apolloClient';
 import { useRouter } from 'next/router';
 import { Button, CardGrid, Longform, Section } from 'ui-kit';
 import {
@@ -203,7 +203,10 @@ export default function Page({
             alignItems="center"
           >
             {extraCTA.map(cta => (
-              <Button onClick={() => router.push(cta.buttonLink)}>
+              <Button
+                key={cta.id || cta.buttonLink || cta.buttonText}
+                onClick={() => router.push(cta.buttonLink)}
+              >
                 {cta.buttonText}
               </Button>
             ))}
@@ -225,7 +228,7 @@ export default function Page({
 export async function getStaticProps({ params }) {
   const apolloClient = initializeApollo();
 
-  const pageResponse = await apolloClient.query({
+  const pageResponse = await safeQuery(apolloClient, {
     query: GET_UNIVERSAL_CONTENT_ITEM_BY_SLUG,
     variables: {
       slug: params.page,
@@ -245,14 +248,14 @@ export async function getStaticProps({ params }) {
   //   });
   // }
 
-  const ministryResponse = await apolloClient.query({
+  const ministryResponse = await safeQuery(apolloClient, {
     query: GET_MINISTRY_CONTENT,
     variables: {
       ministry: pageData?.ministry,
     },
   });
 
-  const campusesResponse = await apolloClient.query({
+  const campusesResponse = await safeQuery(apolloClient, {
     query: GET_CAMPUSES,
   });
 
@@ -272,16 +275,17 @@ export async function getStaticProps({ params }) {
 export async function getStaticPaths() {
   const apolloClient = initializeApollo();
 
-  const pagesResponse = await apolloClient.query({
+  const pagesResponse = await safeQuery(apolloClient, {
     query: GET_CONTENT_CHANNEL,
     variables: {
       itemId: `ContentChannel:${IDS.CONNECT_PAGES}`,
     },
   });
 
-  const connectPages = pagesResponse?.data?.node?.childContentItemsConnection?.edges?.map(
-    ({ node }) => node
-  );
+  const connectPages =
+    pagesResponse?.data?.node?.childContentItemsConnection?.edges?.map(
+      ({ node }) => node
+    ) || [];
 
   // Get the paths we want to pre-render
   const paths = connectPages.map(({ sharing }) => ({

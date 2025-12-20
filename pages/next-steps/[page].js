@@ -11,7 +11,7 @@ import { GET_CAMPUSES } from 'hooks/useCampuses';
 import { GET_CONTENT_CHANNEL } from 'hooks/useContentChannel';
 import { GET_MINISTRY_CONTENT } from 'hooks/useMinistryContent';
 import { GET_UNIVERSAL_CONTENT_ITEM_BY_SLUG } from 'hooks/useUniversalContentItemBySlug';
-import { initializeApollo } from 'lib/apolloClient';
+import { initializeApollo, safeQuery } from 'lib/apolloClient';
 import { useRouter } from 'next/router';
 import { CardGrid, Longform, Section } from 'ui-kit';
 import { getIdSuffix, getMetaData, getSlugFromURL } from 'utils';
@@ -139,7 +139,7 @@ export default function Page({
 export async function getStaticProps(context) {
   const apolloClient = initializeApollo();
 
-  const pageResponse = await apolloClient.query({
+  const pageResponse = await safeQuery(apolloClient, {
     query: GET_UNIVERSAL_CONTENT_ITEM_BY_SLUG,
     variables: {
       slug: context.params.page,
@@ -149,14 +149,14 @@ export async function getStaticProps(context) {
 
   const pageData = pageResponse?.data?.getContentBySlug;
 
-  const ministryResponse = await apolloClient.query({
+  const ministryResponse = await safeQuery(apolloClient, {
     query: GET_MINISTRY_CONTENT,
     variables: {
       ministry: pageData?.ministry,
     },
   });
 
-  const campusesResponse = await apolloClient.query({
+  const campusesResponse = await safeQuery(apolloClient, {
     query: GET_CAMPUSES,
   });
 
@@ -174,16 +174,17 @@ export async function getStaticProps(context) {
 export async function getStaticPaths() {
   const apolloClient = initializeApollo();
 
-  const pagesResponse = await apolloClient.query({
+  const pagesResponse = await safeQuery(apolloClient, {
     query: GET_CONTENT_CHANNEL,
     variables: {
       itemId: `ContentChannel:${IDS.NEXT_STEPS_PAGES}`,
     },
   });
 
-  const nextStepsPages = pagesResponse?.data?.node?.childContentItemsConnection?.edges?.map(
-    ({ node }) => node
-  );
+  const nextStepsPages =
+    pagesResponse?.data?.node?.childContentItemsConnection?.edges?.map(
+      ({ node }) => node
+    ) || [];
 
   // Get the paths we want to pre-render
   const paths = nextStepsPages.map(({ sharing }) => ({

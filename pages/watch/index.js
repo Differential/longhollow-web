@@ -10,7 +10,8 @@ import { GET_CONTENT_BY_SLUG } from 'hooks/useContentBySlug';
 import { GET_CONTENT_CHANNEL } from 'hooks/useContentChannel';
 import useLiveStreams from 'hooks/useLiveStreams';
 import { GET_MESSAGE_SERIES } from 'hooks/useMessageSeries';
-import { initializeApollo } from 'lib/apolloClient';
+import { initializeApollo, safeQuery } from 'lib/apolloClient';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Box, CardGrid, Heading, Section } from 'ui-kit';
 import {
@@ -35,6 +36,8 @@ export default function Watch({
 
   const { prettyCountdown, liveStreams } = useLiveStreams();
   const live = liveStreams?.[0]?.isLive;
+  const primaryHref = liveStreams?.[0]?.webViewUrl || '/about/schedule';
+  const isPrimaryInternal = primaryHref.startsWith('/');
 
   return (
     <Layout dropdownData={dropdownData}>
@@ -45,22 +48,38 @@ export default function Watch({
         justifyText="center"
         backdrop={false}
         primaryButton={
-          <a
-            className="btn"
-            style={{
-              pointerEvents: 'auto',
-              marginRight: '16px',
-              zIndex: 10,
-              width: 'auto',
-              padding: '14px 28px',
-            }}
-            href={live ? liveStreams[0].webViewUrl : 'about/schedule'}
-          >
-            {live ? 'Watch Now' : 'Our Weekly Schedule'}
-          </a>
+          isPrimaryInternal ? (
+            <Link
+              className="btn"
+              style={{
+                pointerEvents: 'auto',
+                marginRight: '16px',
+                zIndex: 10,
+                width: 'auto',
+                padding: '14px 28px',
+              }}
+              href={primaryHref}
+            >
+              {live ? 'Watch Now' : 'Our Weekly Schedule'}
+            </Link>
+          ) : (
+            <a
+              className="btn"
+              style={{
+                pointerEvents: 'auto',
+                marginRight: '16px',
+                zIndex: 10,
+                width: 'auto',
+                padding: '14px 28px',
+              }}
+              href={primaryHref}
+            >
+              {live ? 'Watch Now' : 'Our Weekly Schedule'}
+            </a>
+          )
         }
         secondaryButton={
-          <a
+          <Link
             className="btn"
             style={{
               width: 'auto',
@@ -70,7 +89,7 @@ export default function Watch({
             href="/next-steps/join-us-online"
           >
             {live ? 'Other Ways to Watch' : 'How to Watch'}
-          </a>
+          </Link>
         }
       />
       <Section
@@ -255,53 +274,55 @@ export default function Watch({
 export async function getStaticProps() {
   const apolloClient = initializeApollo();
 
-  const sermons = await apolloClient.query({
+  const sermons = await safeQuery(apolloClient, {
     query: GET_CONTENT_CHANNEL,
     variables: {
       itemId: getChannelId(IDS.MESSAGES.SUNDAY),
     },
   });
 
-  const watchRequest = await apolloClient.query({
+  const watchRequest = await safeQuery(apolloClient, {
     query: GET_CONTENT_CHANNEL,
     variables: {
       itemId: getChannelId(IDS.WATCH_PAGES),
     },
   });
 
-  const sundaySeries = await apolloClient.query({
+  const sundaySeries = await safeQuery(apolloClient, {
     query: GET_MESSAGE_SERIES,
     variables: {
       itemId: getChannelId(IDS.SERIES.SUNDAY),
     },
   });
 
-  const baptismChannel = await apolloClient.query({
+  const baptismChannel = await safeQuery(apolloClient, {
     query: GET_CONTENT_BY_SLUG,
     variables: {
       slug: BAPTISMS_CHANNEL_SLUG,
     },
   });
-  const baptisms = (
-    baptismChannel?.data?.getContentBySlug?.childContentItemsConnection
-      ?.edges || []
-  ).map(node => ({
+
+  const baptismContent = baptismChannel?.data?.getContentBySlug;
+  const baptismEdges =
+    baptismContent?.childContentItemsConnection?.edges || [];
+  const baptisms = baptismEdges.map(node => ({
     node: {
       ...node.node,
-      coverImage: baptismChannel.data.getContentBySlug.coverImage,
+      coverImage: baptismContent?.coverImage,
     },
   }));
+
+  const sermonEdges =
+    sermons?.data?.node?.childContentItemsConnection?.edges || [];
 
   return {
     props: {
       initialApolloState: apolloClient.cache.extract(),
-      series: [sundaySeries?.data?.node],
+      series: sundaySeries?.data?.node ? [sundaySeries.data.node] : [],
       baptisms,
       watchPages:
         watchRequest?.data?.node?.childContentItemsConnection?.edges || [],
-      sermons: sermons?.data?.node?.childContentItemsConnection?.edges.filter(
-        ({ node }) => getMediaSource(node)
-      ),
+      sermons: sermonEdges.filter(({ node }) => getMediaSource(node)),
     },
     revalidate: 60, // In seconds
   };

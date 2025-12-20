@@ -24,7 +24,7 @@ function App({ Component, pageProps = {}, dropdownData }) {
     return () => {
       router.events.off('routeChangeComplete', handleRouteChangeComplete);
     };
-  }, []);
+  }, [router.events]);
 
   const { initialApolloState, ...componentProps } = pageProps;
 

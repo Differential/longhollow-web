@@ -35,15 +35,13 @@ export default function Page({
       }
     `
   );
-  if (authData?.currentUser?.id) {
-    const token = authData.currentUser.rock.authToken;
-    const html = data?.htmlContent || '';
-    const authedHTML = html.replace(
-      /"([^"]*my\.longhollow\.com[^"]*)"/g,
-      (match, p1) => `"${p1}?rckipid=${token}"`
-    );
-    data.htmlContent = authedHTML;
-  }
+  const token = authData?.currentUser?.rock?.authToken;
+  const htmlContent = token
+    ? (data?.htmlContent || '').replace(
+        /"([^"]*my\.longhollow\.com[^"]*)"/g,
+        (match, p1) => `"${p1}?rckipid=${token}"`
+      )
+    : data?.htmlContent;
 
   if (data?.loading || router.isFallback) {
     return null;
@@ -179,15 +177,15 @@ export default function Page({
         <Section
           mb={{
             _: 'l',
-            lg: data.htmlContent ? 'l' : 'xxl',
+            lg: htmlContent ? 'l' : 'xxl',
           }}
         >
           <MetadataCallout data={data} />
         </Section>
       ) : null}
-      {data.htmlContent && (
+      {htmlContent && (
         <Section mb={{ _: 'l', lg: 'xxl' }}>
-          <Longform dangerouslySetInnerHTML={{ __html: data.htmlContent }} />
+          <Longform dangerouslySetInnerHTML={{ __html: htmlContent }} />
         </Section>
       )}
       {data.ctaLinks?.length ? (

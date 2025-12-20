@@ -9,7 +9,7 @@ import { GET_CAMPUSES } from 'hooks/useCampuses';
 import { GET_CONTENT_CHANNEL } from 'hooks/useContentChannel';
 import { GET_MINISTRY_CONTENT } from 'hooks/useMinistryContent';
 import { GET_UNIVERSAL_CONTENT_ITEM_BY_SLUG } from 'hooks/useUniversalContentItemBySlug';
-import { initializeApollo } from 'lib/apolloClient';
+import { initializeApollo, safeQuery } from 'lib/apolloClient';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { CardGrid, Longform, Section } from 'ui-kit';
@@ -147,7 +147,7 @@ export default function Page({
 export async function getStaticProps(context) {
   const apolloClient = initializeApollo();
 
-  const pageResponse = await apolloClient.query({
+  const pageResponse = await safeQuery(apolloClient, {
     query: GET_UNIVERSAL_CONTENT_ITEM_BY_SLUG,
     variables: {
       slug: context.params.page,
@@ -155,21 +155,21 @@ export async function getStaticProps(context) {
   });
   const pageData = pageResponse?.data?.getContentBySlug;
 
-  const submenuLinks = await apolloClient.query({
+  const submenuLinks = await safeQuery(apolloClient, {
     query: GET_CONTENT_CHANNEL,
     variables: {
       itemId: getChannelId(IDS.ABOUT_PAGES),
     },
   });
 
-  const ministryResponse = await apolloClient.query({
+  const ministryResponse = await safeQuery(apolloClient, {
     query: GET_MINISTRY_CONTENT,
     variables: {
       ministry: pageData?.ministry,
     },
   });
 
-  const campusesResponse = await apolloClient.query({
+  const campusesResponse = await safeQuery(apolloClient, {
     query: GET_CAMPUSES,
   });
 
@@ -178,7 +178,7 @@ export async function getStaticProps(context) {
       initialApolloState: apolloClient.cache.extract(),
       data: pageData,
       submenuLinks:
-        submenuLinks?.data?.node?.childContentItemsConnection?.edges,
+        submenuLinks?.data?.node?.childContentItemsConnection?.edges || [],
       campuses: campusesResponse?.data?.campuses || [],
       relatedContent: ministryResponse?.data,
     },
@@ -189,16 +189,17 @@ export async function getStaticProps(context) {
 export async function getStaticPaths() {
   const apolloClient = initializeApollo();
 
-  const pagesResponse = await apolloClient.query({
+  const pagesResponse = await safeQuery(apolloClient, {
     query: GET_CONTENT_CHANNEL,
     variables: {
       itemId: `ContentChannel:${IDS.ABOUT_PAGES}`,
     },
   });
 
-  const aboutPages = pagesResponse?.data?.node?.childContentItemsConnection?.edges?.map(
-    ({ node }) => node
-  );
+  const aboutPages =
+    pagesResponse?.data?.node?.childContentItemsConnection?.edges?.map(
+      ({ node }) => node
+    ) || [];
 
   // Get the paths we want to pre-render
   const paths = aboutPages.map(({ sharing }) => ({

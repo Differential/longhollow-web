@@ -6,9 +6,9 @@ import { format } from 'date-fns';
 import { GET_CONTENT_BY_SLUG } from 'hooks/useContentBySlug';
 import { GET_MESSAGE_CHANNEL } from 'hooks/useMessageChannel';
 import { GET_MESSAGE_SERIES } from 'hooks/useMessageSeries';
-import { initializeApollo } from 'lib/apolloClient';
+import { initializeApollo, safeQuery } from 'lib/apolloClient';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTheme } from 'styled-components';
 import { Box, Button, Longform, Section } from 'ui-kit';
 import { getChannelId, getIdSuffix, getMetaData, getSlugFromURL } from 'utils';
@@ -17,26 +17,20 @@ export default function Channel({ item, dropdownData, messageChannel } = {}) {
   const router = useRouter();
   const theme = useTheme();
 
-  const [videos, setVideos] = useState(
-    messageChannel?.childContentItemsConnection?.edges || []
-  );
-  const [cursor, setCursor] = useState(
-    messageChannel?.childContentItemsConnection?.pageInfo?.endCursor
-  );
+  const [extraByChannel, setExtraByChannel] = useState({});
+  const channelId = messageChannel?.id;
+  const baseVideos =
+    messageChannel?.childContentItemsConnection?.edges || [];
+  const baseCursor =
+    messageChannel?.childContentItemsConnection?.pageInfo?.endCursor;
+  const extraState = channelId ? extraByChannel[channelId] : null;
+  const videos = extraState
+    ? [...baseVideos, ...extraState.videos]
+    : baseVideos;
+  const cursor = extraState?.cursor || baseCursor;
 
-  const [fetchMore, { loading }] = useLazyQuery(GET_MESSAGE_CHANNEL, {
-    onCompleted: data => {
-      setVideos([...videos, ...data?.node?.childContentItemsConnection?.edges]);
-      setCursor(data?.node?.childContentItemsConnection?.pageInfo?.endCursor);
-    },
-  });
-
-  useEffect(() => {
-    setVideos(messageChannel?.childContentItemsConnection?.edges || []);
-    setCursor(
-      messageChannel?.childContentItemsConnection?.pageInfo?.endCursor || []
-    );
-  }, [messageChannel]);
+  const [fetchMore, { data: fetchMoreData, loading }] =
+    useLazyQuery(GET_MESSAGE_CHANNEL);
 
   if (router.isFallback) {
     return null;
@@ -88,9 +82,25 @@ export default function Channel({ item, dropdownData, messageChannel } = {}) {
       </Section>
       {totalVideoCount > videos?.length ? (
         <Button
-          onClick={() => {
-            fetchMore({
+          onClick={async () => {
+            const response = await fetchMore({
               variables: { itemId: item?.id, after: cursor },
+            });
+            if (!channelId || response?.data?.node?.id !== channelId) return;
+            const newEdges =
+              response?.data?.node?.childContentItemsConnection?.edges || [];
+            const newCursor =
+              response?.data?.node?.childContentItemsConnection?.pageInfo
+                ?.endCursor;
+            setExtraByChannel(prev => {
+              const existing = prev[channelId]?.videos || [];
+              return {
+                ...prev,
+                [channelId]: {
+                  videos: [...existing, ...newEdges],
+                  cursor: newCursor,
+                },
+              };
             });
           }}
           status={loading ? 'LOADING' : 'SUCCESS'}
@@ -107,16 +117,23 @@ export default function Channel({ item, dropdownData, messageChannel } = {}) {
 export async function getStaticProps(context) {
   const apolloClient = initializeApollo();
 
-  const itemResponse = await apolloClient.query({
+  const itemResponse = await safeQuery(apolloClient, {
     query: GET_CONTENT_BY_SLUG,
     variables: {
       slug: context.params.channel,
     },
   });
 
-  const item = itemResponse.data?.getContentBySlug;
+  const item = itemResponse?.data?.getContentBySlug;
 
-  const messageChannelResponse = await apolloClient.query({
+  if (!item) {
+    return {
+      notFound: true,
+      revalidate: 60,
+    };
+  }
+
+  const messageChannelResponse = await safeQuery(apolloClient, {
     query: GET_MESSAGE_CHANNEL,
     variables: {
       itemId: item?.id,
@@ -129,6 +146,7 @@ export async function getStaticProps(context) {
       item,
       messageChannel: messageChannelResponse?.data?.node,
     },
+    revalidate: 60,
   };
 }
 
@@ -140,7 +158,7 @@ export async function getStaticPaths() {
   const channels = (
     await Promise.all(
       series?.map(id =>
-        apolloClient.query({
+        safeQuery(apolloClient, {
           query: GET_MESSAGE_SERIES,
           variables: {
             itemId: getChannelId(id),
@@ -148,12 +166,14 @@ export async function getStaticPaths() {
         })
       )
     )
-  ).flatMap(({ data }) =>
-    data?.node?.childContentItemsConnection?.edges?.map(({ node }) => ({
-      channel: node,
-      seriesId: data?.node?.id,
-    }))
-  );
+  )
+    .filter(Boolean)
+    .flatMap(({ data }) =>
+      data?.node?.childContentItemsConnection?.edges?.map(({ node }) => ({
+        channel: node,
+        seriesId: data?.node?.id,
+      }))
+    );
 
   const paths = channels.map(({ channel, seriesId }) => ({
     params: {

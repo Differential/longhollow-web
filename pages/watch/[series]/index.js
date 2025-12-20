@@ -2,7 +2,7 @@ import { useLazyQuery } from '@apollo/client';
 import { LargeImage, Layout } from 'components';
 import IDS from 'config/ids';
 import { GET_MESSAGE_SERIES } from 'hooks/useMessageSeries';
-import { initializeApollo } from 'lib/apolloClient';
+import { initializeApollo, safeQuery } from 'lib/apolloClient';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { Box, Button, Heading } from 'ui-kit';
@@ -18,12 +18,8 @@ export default function Series({ item, dropdownData } = {}) {
     item?.childContentItemsConnection?.pageInfo?.endCursor
   );
 
-  const [fetchMore, { loading }] = useLazyQuery(GET_MESSAGE_SERIES, {
-    onCompleted: data => {
-      setSeries([...series, ...data?.node?.childContentItemsConnection?.edges]);
-      setCursor(data?.node?.childContentItemsConnection?.pageInfo?.endCursor);
-    },
-  });
+  const [fetchMore, { data: fetchMoreData, loading }] =
+    useLazyQuery(GET_MESSAGE_SERIES);
 
   if (router.isFallback) {
     return null;
@@ -66,10 +62,17 @@ export default function Series({ item, dropdownData } = {}) {
       </Box>
       {totalSeriesCount > series?.length ? (
         <Button
-          onClick={() => {
-            fetchMore({
+          onClick={async () => {
+            const response = await fetchMore({
               variables: { itemId: item?.id, after: cursor },
             });
+            const newEdges =
+              response?.data?.node?.childContentItemsConnection?.edges || [];
+            const newCursor =
+              response?.data?.node?.childContentItemsConnection?.pageInfo
+                ?.endCursor;
+            setSeries(prev => [...prev, ...newEdges]);
+            setCursor(newCursor);
           }}
           status={loading ? 'LOADING' : 'SUCCESS'}
           mx="auto"
@@ -85,7 +88,7 @@ export default function Series({ item, dropdownData } = {}) {
 export async function getStaticProps(context) {
   const apolloClient = initializeApollo();
 
-  const seriesResponse = await apolloClient.query({
+  const seriesResponse = await safeQuery(apolloClient, {
     query: GET_MESSAGE_SERIES,
     variables: {
       itemId: getChannelId(context.params.series),
