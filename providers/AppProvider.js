@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ApolloProvider } from '@apollo/client';
+import { ApolloProvider } from '@apollo/client/react';
 
 import { useApollo } from 'lib/apolloClient';
 import { AuthProvider, ModalProvider } from 'providers';

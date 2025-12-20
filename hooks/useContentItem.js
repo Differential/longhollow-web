@@ -1,4 +1,5 @@
-import { gql, useQuery } from '@apollo/client';
+import { gql } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 import { SOURCES } from 'lib/apolloClient/fragments';
 
 export const GET_CONTENT_ITEM = gql`

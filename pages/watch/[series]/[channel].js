@@ -1,4 +1,4 @@
-import { useLazyQuery } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client/react';
 import { LargeImage, Layout, MainPhotoHeader } from 'components';
 import IDS from 'config/ids';
 import 'core-js/features/promise';

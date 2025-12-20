@@ -1,4 +1,5 @@
-import { gql, useQuery } from '@apollo/client';
+import { gql } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 
 export const GET_DEVOTIONAL_CONTENT_ITEM = gql`
   query getDevotionalContentItem($itemId: ID!) {

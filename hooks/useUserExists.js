@@ -1,4 +1,5 @@
-import { gql, useLazyQuery } from '@apollo/client';
+import { gql } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client/react';
 
 export const USER_EXISTS = gql`
   query userExists($identity: String!) {
