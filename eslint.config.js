@@ -1,18 +1,20 @@
-const nextCoreWebVitals = require('eslint-config-next/core-web-vitals');
+const { FlatCompat } = require('@eslint/eslintrc');
+
+const compat = new FlatCompat({
+  baseDirectory: __dirname,
+});
 
 module.exports = [
   {
     ignores: ['.next/**'],
   },
-  ...nextCoreWebVitals,
+  ...compat.extends('next/core-web-vitals'),
   {
     rules: {
       '@next/next/no-html-link-for-pages': 'warn',
       'react/display-name': 'warn',
       'react/jsx-key': 'warn',
       'react/no-unescaped-entities': 'warn',
-      'react-hooks/immutability': 'warn',
-      'react-hooks/set-state-in-effect': 'warn',
     },
   },
   {
