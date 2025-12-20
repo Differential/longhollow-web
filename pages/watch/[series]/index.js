@@ -2,9 +2,9 @@ import { useLazyQuery } from '@apollo/client';
 import { LargeImage, Layout } from 'components';
 import IDS from 'config/ids';
 import { GET_MESSAGE_SERIES } from 'hooks/useMessageSeries';
-import { initializeApollo } from 'lib/apolloClient';
+import { initializeApollo, safeQuery } from 'lib/apolloClient';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, Button, Heading } from 'ui-kit';
 import { getChannelId, getMetaData, getSlugFromURL } from 'utils';
 
@@ -18,12 +18,18 @@ export default function Series({ item, dropdownData } = {}) {
     item?.childContentItemsConnection?.pageInfo?.endCursor
   );
 
-  const [fetchMore, { loading }] = useLazyQuery(GET_MESSAGE_SERIES, {
-    onCompleted: data => {
-      setSeries([...series, ...data?.node?.childContentItemsConnection?.edges]);
-      setCursor(data?.node?.childContentItemsConnection?.pageInfo?.endCursor);
-    },
-  });
+  const [fetchMore, { data: fetchMoreData, loading }] =
+    useLazyQuery(GET_MESSAGE_SERIES);
+
+  useEffect(() => {
+    if (!fetchMoreData?.node) return;
+    const newEdges =
+      fetchMoreData?.node?.childContentItemsConnection?.edges || [];
+    const newCursor =
+      fetchMoreData?.node?.childContentItemsConnection?.pageInfo?.endCursor;
+    setSeries(prev => [...prev, ...newEdges]);
+    setCursor(newCursor);
+  }, [fetchMoreData]);
 
   if (router.isFallback) {
     return null;
@@ -85,7 +91,7 @@ export default function Series({ item, dropdownData } = {}) {
 export async function getStaticProps(context) {
   const apolloClient = initializeApollo();
 
-  const seriesResponse = await apolloClient.query({
+  const seriesResponse = await safeQuery(apolloClient, {
     query: GET_MESSAGE_SERIES,
     variables: {
       itemId: getChannelId(context.params.series),

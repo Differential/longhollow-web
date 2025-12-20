@@ -10,7 +10,7 @@ import { GET_CONTENT_BY_SLUG } from 'hooks/useContentBySlug';
 import { GET_CONTENT_CHANNEL } from 'hooks/useContentChannel';
 import useLiveStreams from 'hooks/useLiveStreams';
 import { GET_MESSAGE_SERIES } from 'hooks/useMessageSeries';
-import { initializeApollo } from 'lib/apolloClient';
+import { initializeApollo, safeQuery } from 'lib/apolloClient';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Box, CardGrid, Heading, Section } from 'ui-kit';
@@ -274,28 +274,28 @@ export default function Watch({
 export async function getStaticProps() {
   const apolloClient = initializeApollo();
 
-  const sermons = await apolloClient.query({
+  const sermons = await safeQuery(apolloClient, {
     query: GET_CONTENT_CHANNEL,
     variables: {
       itemId: getChannelId(IDS.MESSAGES.SUNDAY),
     },
   });
 
-  const watchRequest = await apolloClient.query({
+  const watchRequest = await safeQuery(apolloClient, {
     query: GET_CONTENT_CHANNEL,
     variables: {
       itemId: getChannelId(IDS.WATCH_PAGES),
     },
   });
 
-  const sundaySeries = await apolloClient.query({
+  const sundaySeries = await safeQuery(apolloClient, {
     query: GET_MESSAGE_SERIES,
     variables: {
       itemId: getChannelId(IDS.SERIES.SUNDAY),
     },
   });
 
-  const baptismChannel = await apolloClient.query({
+  const baptismChannel = await safeQuery(apolloClient, {
     query: GET_CONTENT_BY_SLUG,
     variables: {
       slug: BAPTISMS_CHANNEL_SLUG,
