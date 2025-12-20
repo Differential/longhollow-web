@@ -1,4 +1,4 @@
-import { initializeApollo } from 'lib/apolloClient';
+import { initializeApollo, safeQuery } from 'lib/apolloClient';
 
 import { FeedFeaturesProvider } from 'providers';
 import { HomeFeed, Layout } from 'components';
@@ -22,7 +22,7 @@ export default function Home({ dropdownData, ...props } = {}) {
 export async function getStaticProps() {
   const apolloClient = initializeApollo();
 
-  const sermonsRequest = await apolloClient.query({
+  const sermonsRequest = await safeQuery(apolloClient, {
     query: GET_CONTENT_CHANNEL,
     variables: {
       itemId: getChannelId(IDS.MESSAGES.SUNDAY),
@@ -30,11 +30,11 @@ export async function getStaticProps() {
   });
 
   const sermons =
-    sermonsRequest?.data?.node?.childContentItemsConnection?.edges;
+    sermonsRequest?.data?.node?.childContentItemsConnection?.edges || [];
   const sermonVideos = sermons.filter(({ node }) => getMediaSource(node));
   const latestSermon = sermonVideos[0]?.node;
 
-  const sermonRequest = await apolloClient.query({
+  const sermonRequest = await safeQuery(apolloClient, {
     query: GET_CONTENT_ITEM,
     variables: {
       itemId: getItemId(getIdSuffix(latestSermon?.id)),
@@ -42,7 +42,7 @@ export async function getStaticProps() {
     skip: !latestSermon,
   });
 
-  const articles = await apolloClient.query({
+  const articles = await safeQuery(apolloClient, {
     query: GET_CONTENT_CHANNEL,
     variables: {
       itemId: getChannelId(IDS.CHANNELS.ARTICLES),
@@ -50,14 +50,16 @@ export async function getStaticProps() {
   });
 
   // sort events
-  const { data: eventsData } = await apolloClient.query({
+  const eventsRequest = await safeQuery(apolloClient, {
     query: GET_CONTENT_CHANNEL,
     variables: {
       itemId: getChannelId(IDS.CHANNELS.EVENTS),
     },
   });
-  const events =
-    [...eventsData?.node?.childContentItemsConnection?.edges] || [];
+  const eventsData = eventsRequest?.data;
+  const events = [
+    ...(eventsData?.node?.childContentItemsConnection?.edges || []),
+  ];
   events.sort((a, b) => {
     const date1 = a.node.dates?.split(',')[0];
     const date2 = b.node.dates?.split(',')[0];

@@ -126,7 +126,14 @@ export async function getStaticProps(context) {
     },
   });
 
-  const item = itemResponse.data?.getContentBySlug;
+  const item = itemResponse?.data?.getContentBySlug;
+
+  if (!item) {
+    return {
+      notFound: true,
+      revalidate: 60,
+    };
+  }
 
   const messageChannelResponse = await safeQuery(apolloClient, {
     query: GET_MESSAGE_CHANNEL,
@@ -141,6 +148,7 @@ export async function getStaticProps(context) {
       item,
       messageChannel: messageChannelResponse?.data?.node,
     },
+    revalidate: 60,
   };
 }
 

@@ -301,26 +301,28 @@ export async function getStaticProps() {
       slug: BAPTISMS_CHANNEL_SLUG,
     },
   });
-  const baptisms = (
-    baptismChannel?.data?.getContentBySlug?.childContentItemsConnection
-      ?.edges || []
-  ).map(node => ({
+
+  const baptismContent = baptismChannel?.data?.getContentBySlug;
+  const baptismEdges =
+    baptismContent?.childContentItemsConnection?.edges || [];
+  const baptisms = baptismEdges.map(node => ({
     node: {
       ...node.node,
-      coverImage: baptismChannel.data.getContentBySlug.coverImage,
+      coverImage: baptismContent?.coverImage,
     },
   }));
+
+  const sermonEdges =
+    sermons?.data?.node?.childContentItemsConnection?.edges || [];
 
   return {
     props: {
       initialApolloState: apolloClient.cache.extract(),
-      series: [sundaySeries?.data?.node],
+      series: sundaySeries?.data?.node ? [sundaySeries.data.node] : [],
       baptisms,
       watchPages:
         watchRequest?.data?.node?.childContentItemsConnection?.edges || [],
-      sermons: sermons?.data?.node?.childContentItemsConnection?.edges.filter(
-        ({ node }) => getMediaSource(node)
-      ),
+      sermons: sermonEdges.filter(({ node }) => getMediaSource(node)),
     },
     revalidate: 60, // In seconds
   };
