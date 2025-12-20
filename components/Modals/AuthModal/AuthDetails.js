@@ -16,8 +16,8 @@ function AuthDetails() {
     handleAuthIdentity,
   } = useAuthIdentity();
   const [_, dispatch] = useAuth();
-  const { values, handleSubmit, handleChange } = useForm(() => {
-    const age = getAge(values.birthDate);
+  const { values, handleSubmit, handleChange } = useForm(formValues => {
+    const age = getAge(formValues.birthDate);
     // Make sure they are at least 13 years of age.
     if (age < 13) {
       setError({
@@ -28,9 +28,9 @@ function AuthDetails() {
       dispatch(
         updateAuth({
           profile: {
-            ...values,
-            birthDate: new Date(values.birthDate),
-            gender: upperFirst(values.gender),
+            ...formValues,
+            birthDate: new Date(formValues.birthDate),
+            gender: upperFirst(formValues.gender),
           },
         })
       );

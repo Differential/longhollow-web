@@ -8,7 +8,7 @@ import { GET_MESSAGE_CHANNEL } from 'hooks/useMessageChannel';
 import { GET_MESSAGE_SERIES } from 'hooks/useMessageSeries';
 import { initializeApollo } from 'lib/apolloClient';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTheme } from 'styled-components';
 import { Box, Button, Longform, Section } from 'ui-kit';
 import { getChannelId, getIdSuffix, getMetaData, getSlugFromURL } from 'utils';
@@ -17,26 +17,37 @@ export default function Channel({ item, dropdownData, messageChannel } = {}) {
   const router = useRouter();
   const theme = useTheme();
 
-  const [videos, setVideos] = useState(
-    messageChannel?.childContentItemsConnection?.edges || []
-  );
-  const [cursor, setCursor] = useState(
-    messageChannel?.childContentItemsConnection?.pageInfo?.endCursor
-  );
+  const [extraByChannel, setExtraByChannel] = useState({});
+  const channelId = messageChannel?.id;
+  const baseVideos =
+    messageChannel?.childContentItemsConnection?.edges || [];
+  const baseCursor =
+    messageChannel?.childContentItemsConnection?.pageInfo?.endCursor;
+  const extraState = channelId ? extraByChannel[channelId] : null;
+  const videos = extraState
+    ? [...baseVideos, ...extraState.videos]
+    : baseVideos;
+  const cursor = extraState?.cursor || baseCursor;
 
   const [fetchMore, { loading }] = useLazyQuery(GET_MESSAGE_CHANNEL, {
     onCompleted: data => {
-      setVideos([...videos, ...data?.node?.childContentItemsConnection?.edges]);
-      setCursor(data?.node?.childContentItemsConnection?.pageInfo?.endCursor);
+      if (!channelId) return;
+      const newEdges =
+        data?.node?.childContentItemsConnection?.edges || [];
+      const newCursor =
+        data?.node?.childContentItemsConnection?.pageInfo?.endCursor;
+      setExtraByChannel(prev => {
+        const existing = prev[channelId]?.videos || [];
+        return {
+          ...prev,
+          [channelId]: {
+            videos: [...existing, ...newEdges],
+            cursor: newCursor,
+          },
+        };
+      });
     },
   });
-
-  useEffect(() => {
-    setVideos(messageChannel?.childContentItemsConnection?.edges || []);
-    setCursor(
-      messageChannel?.childContentItemsConnection?.pageInfo?.endCursor || []
-    );
-  }, [messageChannel]);
 
   if (router.isFallback) {
     return null;

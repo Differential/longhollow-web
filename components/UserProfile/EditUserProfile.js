@@ -56,46 +56,58 @@ function EditUserProfile(props = {}) {
     allowSMS,
   } = user;
 
-  function getCommunicationPreference(key, variable) {
-    const _isNil = isNil(values[key]) && isNil(variable);
+  function getCommunicationPreference(formValues, key, variable) {
+    const _isNil = isNil(formValues[key]) && isNil(variable);
     if (_isNil) return false;
-    if (!isNil(values[key])) return values[key];
+    if (!isNil(formValues[key])) return formValues[key];
     if (!isNil(variable)) return variable;
     return false;
   }
 
-  function onSubmit() {
+  function onSubmit(formValues) {
     try {
       updateCurrentPerson({
         variables: {
           profileFields: [
             {
               field: 'Gender',
-              value: startCase(values.gender) || startCase(gender) || 'Unknown',
+              value:
+                startCase(formValues.gender) || startCase(gender) || 'Unknown',
             },
-            { field: 'BirthDate', value: values.birthdate || birthdate || '' },
+            {
+              field: 'BirthDate',
+              value: formValues.birthdate || birthdate || '',
+            },
             {
               field: 'PhoneNumber',
-              value: values.phone || phone || '',
+              value: formValues.phone || phone || '',
             },
-            { field: 'Email', value: values.email || email || '' },
+            { field: 'Email', value: formValues.email || email || '' },
           ],
           address: {
-            street1: values.street || street || '',
+            street1: formValues.street || street || '',
             street2: '',
-            city: values.city || city || '',
-            state: values.state || state || '',
-            postalCode: values.zip || zip || '',
+            city: formValues.city || city || '',
+            state: formValues.state || state || '',
+            postalCode: formValues.zip || zip || '',
           },
-          campusId: values.campus || campusId || '',
+          campusId: formValues.campus || campusId || '',
           communicationPreferences: [
             {
               type: 'SMS',
-              allow: getCommunicationPreference('allowSMS', allowSMS),
+              allow: getCommunicationPreference(
+                formValues,
+                'allowSMS',
+                allowSMS
+              ),
             },
             {
               type: 'Email',
-              allow: getCommunicationPreference('allowEmail', allowEmail),
+              allow: getCommunicationPreference(
+                formValues,
+                'allowEmail',
+                allowEmail
+              ),
             },
           ],
         },

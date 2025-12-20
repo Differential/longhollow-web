@@ -6,7 +6,7 @@ import styled, { css } from 'styled-components';
 import { Box, Heading } from 'ui-kit';
 import { themeGet } from '@styled-system/theme-get';
 
-// eslint-disable-next-line import/prefer-default-export
+ 
 const usePlayer = ({ src, controls, autoplay, fluid, onError }) => {
   const options = {
     fill: true,

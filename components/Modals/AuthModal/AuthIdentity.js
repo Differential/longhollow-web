@@ -12,10 +12,11 @@ function AuthIdentity() {
     setError,
     handleAuthIdentity,
   } = useAuthIdentity();
+  const identityRef = React.useRef('');
   const [checkIfUserExists] = useUserExists({
     fetchPolicy: 'network-only',
     onCompleted: async data => {
-      const identity = values.identity;
+      const identity = identityRef.current;
       const userExists = data?.userExists !== 'NONE';
       handleAuthIdentity({
         identity,
@@ -24,14 +25,15 @@ function AuthIdentity() {
       });
     },
   });
-  const { values, handleSubmit, handleChange } = useForm(() => {
-    const identity = values.identity;
+  const { values, handleSubmit, handleChange } = useForm(formValues => {
+    const identity = formValues.identity;
     const validEmail = validateEmail(identity);
     const validPhoneNumber = validatePhoneNumber(identity);
     const validIdentity = validEmail || validPhoneNumber;
     if (validIdentity) {
       setStatus('LOADING');
-      checkIfUserExists({ variables: { identity: values.identity } });
+      identityRef.current = identity;
+      checkIfUserExists({ variables: { identity } });
     } else {
       setStatus('ERROR');
       setError({ identity: 'That is not a valid email or phone number.' });

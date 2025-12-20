@@ -90,7 +90,7 @@ function SEO(props = {}) {
             src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_CODE}`}
           />
           <script
-            // eslint-disable-next-line react/no-danger
+             
             dangerouslySetInnerHTML={{
               __html: `
     window.dataLayer = window.dataLayer || [];

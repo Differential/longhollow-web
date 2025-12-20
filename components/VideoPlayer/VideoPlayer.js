@@ -20,12 +20,6 @@ function VideoPlayer({ src, title, details, stopPropagation, ...props } = {}) {
     }
   }, [playing, videoRef]);
 
-  useEffect(() => {
-    if (videoRef.current) {
-      setDuration(videoRef.current.duration || 0);
-    }
-  }, [videoRef]);
-
   const VideoControl = playing ? PauseCircle : PlayCircle;
   return (
     <Box
