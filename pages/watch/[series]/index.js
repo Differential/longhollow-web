@@ -4,7 +4,7 @@ import IDS from 'config/ids';
 import { GET_MESSAGE_SERIES } from 'hooks/useMessageSeries';
 import { initializeApollo, safeQuery } from 'lib/apolloClient';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Box, Button, Heading } from 'ui-kit';
 import { getChannelId, getMetaData, getSlugFromURL } from 'utils';
 
@@ -20,16 +20,6 @@ export default function Series({ item, dropdownData } = {}) {
 
   const [fetchMore, { data: fetchMoreData, loading }] =
     useLazyQuery(GET_MESSAGE_SERIES);
-
-  useEffect(() => {
-    if (!fetchMoreData?.node) return;
-    const newEdges =
-      fetchMoreData?.node?.childContentItemsConnection?.edges || [];
-    const newCursor =
-      fetchMoreData?.node?.childContentItemsConnection?.pageInfo?.endCursor;
-    setSeries(prev => [...prev, ...newEdges]);
-    setCursor(newCursor);
-  }, [fetchMoreData]);
 
   if (router.isFallback) {
     return null;
@@ -72,10 +62,17 @@ export default function Series({ item, dropdownData } = {}) {
       </Box>
       {totalSeriesCount > series?.length ? (
         <Button
-          onClick={() => {
-            fetchMore({
+          onClick={async () => {
+            const response = await fetchMore({
               variables: { itemId: item?.id, after: cursor },
             });
+            const newEdges =
+              response?.data?.node?.childContentItemsConnection?.edges || [];
+            const newCursor =
+              response?.data?.node?.childContentItemsConnection?.pageInfo
+                ?.endCursor;
+            setSeries(prev => [...prev, ...newEdges]);
+            setCursor(newCursor);
           }}
           status={loading ? 'LOADING' : 'SUCCESS'}
           mx="auto"

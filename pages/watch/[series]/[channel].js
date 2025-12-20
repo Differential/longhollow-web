@@ -8,7 +8,7 @@ import { GET_MESSAGE_CHANNEL } from 'hooks/useMessageChannel';
 import { GET_MESSAGE_SERIES } from 'hooks/useMessageSeries';
 import { initializeApollo, safeQuery } from 'lib/apolloClient';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTheme } from 'styled-components';
 import { Box, Button, Longform, Section } from 'ui-kit';
 import { getChannelId, getIdSuffix, getMetaData, getSlugFromURL } from 'utils';
@@ -31,24 +31,6 @@ export default function Channel({ item, dropdownData, messageChannel } = {}) {
 
   const [fetchMore, { data: fetchMoreData, loading }] =
     useLazyQuery(GET_MESSAGE_CHANNEL);
-
-  useEffect(() => {
-    if (!channelId || fetchMoreData?.node?.id !== channelId) return;
-    const newEdges =
-      fetchMoreData?.node?.childContentItemsConnection?.edges || [];
-    const newCursor =
-      fetchMoreData?.node?.childContentItemsConnection?.pageInfo?.endCursor;
-    setExtraByChannel(prev => {
-      const existing = prev[channelId]?.videos || [];
-      return {
-        ...prev,
-        [channelId]: {
-          videos: [...existing, ...newEdges],
-          cursor: newCursor,
-        },
-      };
-    });
-  }, [channelId, fetchMoreData]);
 
   if (router.isFallback) {
     return null;
@@ -100,9 +82,25 @@ export default function Channel({ item, dropdownData, messageChannel } = {}) {
       </Section>
       {totalVideoCount > videos?.length ? (
         <Button
-          onClick={() => {
-            fetchMore({
+          onClick={async () => {
+            const response = await fetchMore({
               variables: { itemId: item?.id, after: cursor },
+            });
+            if (!channelId || response?.data?.node?.id !== channelId) return;
+            const newEdges =
+              response?.data?.node?.childContentItemsConnection?.edges || [];
+            const newCursor =
+              response?.data?.node?.childContentItemsConnection?.pageInfo
+                ?.endCursor;
+            setExtraByChannel(prev => {
+              const existing = prev[channelId]?.videos || [];
+              return {
+                ...prev,
+                [channelId]: {
+                  videos: [...existing, ...newEdges],
+                  cursor: newCursor,
+                },
+              };
             });
           }}
           status={loading ? 'LOADING' : 'SUCCESS'}
