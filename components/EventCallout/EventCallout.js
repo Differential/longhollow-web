@@ -23,6 +23,7 @@ function EventCallout({
         height="60px"
         width="60px"
         src={imageSrc}
+        alt={title || ''}
         rounded="xl"
         bg="neutrals.300"
         style={{ objectFit: 'cover' }}

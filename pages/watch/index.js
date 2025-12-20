@@ -11,6 +11,7 @@ import { GET_CONTENT_CHANNEL } from 'hooks/useContentChannel';
 import useLiveStreams from 'hooks/useLiveStreams';
 import { GET_MESSAGE_SERIES } from 'hooks/useMessageSeries';
 import { initializeApollo } from 'lib/apolloClient';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Box, CardGrid, Heading, Section } from 'ui-kit';
 import {
@@ -35,6 +36,8 @@ export default function Watch({
 
   const { prettyCountdown, liveStreams } = useLiveStreams();
   const live = liveStreams?.[0]?.isLive;
+  const primaryHref = liveStreams?.[0]?.webViewUrl || '/about/schedule';
+  const isPrimaryInternal = primaryHref.startsWith('/');
 
   return (
     <Layout dropdownData={dropdownData}>
@@ -45,22 +48,38 @@ export default function Watch({
         justifyText="center"
         backdrop={false}
         primaryButton={
-          <a
-            className="btn"
-            style={{
-              pointerEvents: 'auto',
-              marginRight: '16px',
-              zIndex: 10,
-              width: 'auto',
-              padding: '14px 28px',
-            }}
-            href={live ? liveStreams[0].webViewUrl : 'about/schedule'}
-          >
-            {live ? 'Watch Now' : 'Our Weekly Schedule'}
-          </a>
+          isPrimaryInternal ? (
+            <Link
+              className="btn"
+              style={{
+                pointerEvents: 'auto',
+                marginRight: '16px',
+                zIndex: 10,
+                width: 'auto',
+                padding: '14px 28px',
+              }}
+              href={primaryHref}
+            >
+              {live ? 'Watch Now' : 'Our Weekly Schedule'}
+            </Link>
+          ) : (
+            <a
+              className="btn"
+              style={{
+                pointerEvents: 'auto',
+                marginRight: '16px',
+                zIndex: 10,
+                width: 'auto',
+                padding: '14px 28px',
+              }}
+              href={primaryHref}
+            >
+              {live ? 'Watch Now' : 'Our Weekly Schedule'}
+            </a>
+          )
         }
         secondaryButton={
-          <a
+          <Link
             className="btn"
             style={{
               width: 'auto',
@@ -70,7 +89,7 @@ export default function Watch({
             href="/next-steps/join-us-online"
           >
             {live ? 'Other Ways to Watch' : 'How to Watch'}
-          </a>
+          </Link>
         }
       />
       <Section

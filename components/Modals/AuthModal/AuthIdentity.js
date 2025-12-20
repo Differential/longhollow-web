@@ -45,7 +45,7 @@ function AuthIdentity() {
   return (
     <>
       <Box as="p" color="subdued" mb="l">
-        Enter your phone number or email address to get started. We'll never
+        Enter your phone number or email address to get started. We&apos;ll never
         share your information or contact you (unless you ask!).
       </Box>
       <Box as="form" action="" onSubmit={handleSubmit} px={{ _: 0, lg: 'xl' }}>

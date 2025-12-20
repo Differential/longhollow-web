@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import { UserProfileProvider } from 'providers';
@@ -78,20 +78,20 @@ function UserProfile(props = {}) {
   const authDispatch = useAuthDispatch();
   const modalDispatch = useModalDispatch();
 
-  function handleSignInClick() {
+  const handleSignInClick = useCallback(() => {
     modalDispatch(showModal('Auth'));
-  }
+  }, [modalDispatch]);
 
-  function handleLogoutClick() {
+  const handleLogoutClick = useCallback(() => {
     authDispatch(logout());
     router.reload();
-  }
+  }, [authDispatch, router]);
 
   useEffect(() => {
     if (!props.loading && props.currentPerson?.length === 0) {
       handleSignInClick();
     }
-  }, []);
+  }, [handleSignInClick, props.currentPerson?.length, props.loading]);
 
   if (props.loading)
     return (

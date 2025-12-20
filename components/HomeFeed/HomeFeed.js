@@ -320,7 +320,7 @@ function HomeFeedCTA({ authenticated, personaFeed }) {
         title={
           <>
             <Heading color="neutrals.900" variant="h2" fontWeight="800">
-              There's Something for Everyone
+              There&apos;s Something for Everyone
             </Heading>
           </>
         }
@@ -328,7 +328,7 @@ function HomeFeedCTA({ authenticated, personaFeed }) {
           mb: { xl: 'xxl' },
           mt: { _: 'm', lg: 0, xl: 'l' },
         }}
-        supertitle="Don't miss what God's doing this week!"
+        supertitle="Don&apos;t miss what God&apos;s doing this week!"
         description="From Sunday services to Wednesday night activities, there’s always a way to be a part of what God is doing every week at Long Hollow. Check out our weekly schedule for every member of your family, and mark your calendar for several upcoming events."
         actions={[
           {

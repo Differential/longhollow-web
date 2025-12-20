@@ -203,7 +203,10 @@ export default function Page({
             alignItems="center"
           >
             {extraCTA.map(cta => (
-              <Button onClick={() => router.push(cta.buttonLink)}>
+              <Button
+                key={cta.id || cta.buttonLink || cta.buttonText}
+                onClick={() => router.push(cta.buttonLink)}
+              >
                 {cta.buttonText}
               </Button>
             ))}

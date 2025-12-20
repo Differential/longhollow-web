@@ -47,7 +47,7 @@ function Nav({
     return () => {
       router.events.off('routeChangeStart', handleRouteChangeStart);
     };
-  }, []);
+  }, [router.events, setHoveredItem]);
 
   return (
     <Styled.Nav active={active}>

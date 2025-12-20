@@ -6,6 +6,7 @@ import Styled from './Box.styles';
 const Box = forwardRef((props = {}, ref) => {
   return <Styled {...props} ref={ref} />;
 });
+Box.displayName = 'Box';
 
 Box.propTypes = {
   ...systemPropTypes,

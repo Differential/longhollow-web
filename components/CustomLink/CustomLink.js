@@ -19,6 +19,7 @@ function CustomLink({ Component: _Component, href, children, ...props }) {
 const WrappedComponent = React.forwardRef(({ Component, ...props }, ref) => (
   <Component ref={ref} {...props} />
 ));
+WrappedComponent.displayName = 'WrappedComponent';
 
 CustomLink.propTypes = {
   Component: PropTypes.oneOfType([
