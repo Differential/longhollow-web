@@ -35,4 +35,4 @@ jobs:
       - name: Install
         run: npm ci
       - name: Test
-        run: npm test -- --runInBand
+        run: npm test -- --runInBand --watchAll=false
