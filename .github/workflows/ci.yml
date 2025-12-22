@@ -35,4 +35,4 @@ jobs:
       - name: Install
         run: npm ci
       - name: Test
-        run: npx jest --runInBand
+        run: npm test -- --runInBand
