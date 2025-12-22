@@ -14,6 +14,7 @@
     "prestart": "node scripts/generate-fragment-types.js",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "lint": "eslint .",
+    "pretest": "node scripts/generate-fragment-types.js",
     "test": "jest --watch",
     "generate:fragment-types": "node scripts/generate-fragment-types.js"
   },
