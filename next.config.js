@@ -318,6 +318,7 @@ module.exports = {
       { source: '/local', destination: '/search?category=Service%20Opportunities&p=1', permanent: true },
       { source: '/baptism', destination: '/next-steps/baptism', permanent: true },
       { source: '/pray', destination: '/28-days-of-prayer-2026', permanent: true },
+      { source: '/prayerroom', destination: '/the-prayer-room-at-long-hollow', permanent: true },
       { source: '/gifts', destination: 'https://my.longhollow.com/page/694', permanent: true },
       { source: '/podcast', destination: '/watch', permanent: true },
       { source: '/students', destination: '/connect/students', permanent: true },
