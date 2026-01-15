@@ -146,6 +146,7 @@ module.exports = {
       { source: '/testimony', destination: '/ive-been-changed-from-addict-to-pastor', permanent: true },
       { source: '/host', destination: '/host-your-event-or-gathering-at-long-hollow', permanent: true },
       { source: '/5thgrade', destination: '/5th-grade-summer-transition', permanent: true },
+      { source: '/5thgrademissions', destination: '/5th-grade-spring-break-family-mission-trip', permanent: true },
       { source: '/relief', destination: 'https://longhollow.com/crisis-response-team', permanent: true },
       { source: '/hope', destination: '/hope-for-the-holidays-help-and-support-for-those-who-are-hurting-1', permanent: true },
       { source: '/secretchurch', destination: '/secret-church-2025', permanent: true },
