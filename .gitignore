@@ -36,3 +36,4 @@ yarn-error.log*
 
 # generated schema introspection
 /lib/apolloClient/fragmentTypes.json
+.env*.local

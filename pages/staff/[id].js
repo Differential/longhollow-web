@@ -19,7 +19,7 @@ export default function Page({ data, dropdownData }) {
         <Box mt={{ _: 'l' }} px="l">
           <ProfileImage width="400px" src={data?.photo?.uri} />
           <Box pt="xl" pb="m">
-            {data.firstName && data.lastName && (
+            {data?.firstName && data?.lastName && (
               <Heading
                 fontSize="h1"
                 lineHeight="h1"
@@ -30,7 +30,7 @@ export default function Page({ data, dropdownData }) {
                 {`${data.firstName} ${data.lastName}`}
               </Heading>
             )}
-            {data.position && (
+            {data?.position && (
               <Heading
                 fontSize="h3"
                 lineHeight="h3"
@@ -44,19 +44,22 @@ export default function Page({ data, dropdownData }) {
           </Box>
         </Box>
       </Section>
-      {data.htmlContent && (
+      {data?.htmlContent && (
         <Section>
           <Box pt="m" pb="l" px="l">
             <Longform dangerouslySetInnerHTML={{ __html: data.htmlContent }} />
           </Box>
         </Section>
       )}
-      {(data.facebook || data.twitter || data.instagram || data.website) && (
+      {(data?.facebook ||
+        data?.twitter ||
+        data?.instagram ||
+        data?.website) && (
         <Section>
           <Box pb="l" px="l" display="flex" width="400px">
-            {data.facebook && (
+            {data?.facebook && (
               <Box flex="1">
-                <a href={`"${data.facebook}"`}>
+                <a href={data.facebook}>
                   <FacebookLogo
                     size="48"
                     style={{ opacity: '60%', marginRight: theme.space.s }}
@@ -65,9 +68,9 @@ export default function Page({ data, dropdownData }) {
                 </a>
               </Box>
             )}
-            {data.twitter && (
+            {data?.twitter && (
               <Box flex="1">
-                <a href={`"${data.twitter}"`}>
+                <a href={data.twitter}>
                   <TwitterLogo
                     size="48"
                     style={{ opacity: '60%', marginRight: theme.space.s }}
@@ -76,9 +79,9 @@ export default function Page({ data, dropdownData }) {
                 </a>
               </Box>
             )}
-            {data.instagram && (
+            {data?.instagram && (
               <Box flex="1">
-                <a href={`"${data.instagram}"`}>
+                <a href={data.instagram}>
                   <InstagramLogo
                     size="48"
                     style={{ opacity: '60%' }}
@@ -87,9 +90,9 @@ export default function Page({ data, dropdownData }) {
                 </a>
               </Box>
             )}
-            {data.website && (
+            {data?.website && (
               <Box flex="1">
-                <a href={`"${data.website}"`}>
+                <a href={data.website}>
                   <Rss size="48" style={{ opacity: '60%' }} weight="fill" />
                 </a>
               </Box>
@@ -104,18 +107,30 @@ export default function Page({ data, dropdownData }) {
 export async function getServerSideProps(context) {
   const apolloClient = initializeApollo();
 
-  const pageResponse = await apolloClient.query({
-    query: GET_STAFF_MEMBER,
-    variables: {
-      staffId: getStaffId(context.params.id),
-    },
-    skip: !context.params.id,
-  });
+  const id = context?.params?.id;
+  if (!id) return { notFound: true };
 
-  return {
-    props: {
-      initialApolloState: apolloClient.cache.extract(),
-      data: pageResponse?.data?.node,
-    },
-  };
+  try {
+    const pageResponse = await apolloClient.query({
+      query: GET_STAFF_MEMBER,
+      variables: {
+        staffId: getStaffId(id),
+      },
+    });
+
+    const node = pageResponse?.data?.node ?? null;
+    if (!node) return { notFound: true };
+
+    return {
+      props: {
+        initialApolloState: apolloClient.cache.extract(),
+        data: node,
+      },
+    };
+  } catch (error) {
+    // Treat upstream/API failures as a 404 to avoid a hard 500 for bad URLs.
+    return { notFound: true };
+  }
+
+  return { notFound: true };
 }
