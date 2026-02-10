@@ -5,6 +5,15 @@ function getCanonicalSiteUrl() {
   return raw.replace(/\/+$/, '');
 }
 
+function xmlEscape(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
+
 function buildSitemapXml({ baseUrl, urls }) {
   const now = new Date().toISOString();
 
@@ -13,7 +22,7 @@ function buildSitemapXml({ baseUrl, urls }) {
       const loc = `${baseUrl}${path}`;
       return [
         '  <url>',
-        `    <loc>${loc}</loc>`,
+        `    <loc>${xmlEscape(loc)}</loc>`,
         `    <lastmod>${now}</lastmod>`,
         '  </url>',
       ].join('\n');
