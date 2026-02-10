@@ -10,7 +10,7 @@ export async function getServerSideProps({ req, res }) {
   const baseUrl = getCanonicalSiteUrl();
   const body = [
     'User-agent: *',
-    // `/search` is server-rendered and expensive; it was the main endpoint hit during the usage anomaly.
+    // `/search` is server-rendered and expensive
     // Blocking here reduces crawl traffic for well-behaved crawlers.
     'Disallow: /search',
     '',
