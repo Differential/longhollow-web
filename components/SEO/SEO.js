@@ -16,19 +16,7 @@ function getPageTitle(title) {
 
 function SEO(props = {}) {
   const router = useRouter();
-  // Merge defaults so callers can pass partial `meta` without producing
-  // undefined meta tags (React defaultProps does not deep-merge objects).
-  const metaFromProps = props.meta || {};
-  const meta = { ...SEO.defaultProps.meta, ...metaFromProps };
-
-  // Preserve existing behavior: if a page passes `title` plus a partial `meta`
-  // object (without a `meta.title`), `title` should still win.
-  const hasMetaTitle = Object.prototype.hasOwnProperty.call(
-    metaFromProps,
-    'title'
-  );
-  const titleInput = (hasMetaTitle ? metaFromProps.title : props.title) || meta.title;
-  const title = getPageTitle(titleInput);
+  const title = getPageTitle(props.meta.title || props.title);
   const url = `https://longhollow.com${router.asPath}`;
 
   useEffect(() => {
@@ -78,19 +66,16 @@ function SEO(props = {}) {
   return (
     <Head>
       <title>{title}</title>
-      <meta property="og:title" content={title} />
-      <meta name="twitter:title" content={title} />
-      <meta name="keywords" content={meta.keywords} />
-      <meta name="description" content={meta.description} />
-      {meta.robots ? (
-        <meta name="robots" content={meta.robots} />
-      ) : null}
-      <meta property="og:description" content={meta.description} />
-      <meta name="twitter:description" content={meta.description} />
+      <meta property="og:title" content={props.meta.title} />
+      <meta name="twitter:title" content={props.meta.title} />
+      <meta name="keywords" content={props.meta.keywords} />
+      <meta name="description" content={props.meta.description} />
+      <meta property="og:description" content={props.meta.description} />
+      <meta name="twitter:description" content={props.meta.description} />
       <meta property="og:url" content={url} />
       <meta name="twitter:url" content={url} />
-      <meta property="og:image" content={meta.image} />
-      <meta name="twitter:image" content={meta.image} />
+      <meta property="og:image" content={props.meta.image} />
+      <meta name="twitter:image" content={props.meta.image} />
       <meta name="twitter:card" content="summary" />
       <meta
         name="viewport"
@@ -132,7 +117,6 @@ SEO.propTypes = {
     description: PropTypes.string,
     image: PropTypes.string,
     keywords: PropTypes.string,
-    robots: PropTypes.string,
   }),
   title: PropTypes.string,
 };
