@@ -11,12 +11,6 @@ module.exports = {
         source: '/.well-known/apple-app-site-association',
         headers: [{ key: 'content-type', value: 'application/json' }],
       },
-      // Prevent search result pages from being indexed/crawled.
-      // Query params are not part of the pathname match, so this covers `/search?...` as well.
-      {
-        source: '/search',
-        headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
-      },
     ];
   },
   async redirects() {

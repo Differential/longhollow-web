@@ -10,11 +10,9 @@ export async function getServerSideProps({ req, res }) {
   const baseUrl = getCanonicalSiteUrl();
   const body = [
     'User-agent: *',
-    // Let crawlers fetch `/search` so they can observe `X-Robots-Tag: noindex, nofollow`.
-    // Block query variants to reduce crawling of faceted/paginated views.
-    'Allow: /search',
-    'Disallow: /search?*',
-    'Disallow: /_next/',
+    // `/search` is server-rendered and expensive; it was the main endpoint hit during the usage anomaly.
+    // Blocking here reduces crawl traffic for well-behaved crawlers.
+    'Disallow: /search',
     '',
     `Sitemap: ${baseUrl}/sitemap.xml`,
     '',
