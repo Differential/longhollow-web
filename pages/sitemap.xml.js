@@ -1,7 +1,8 @@
 function getCanonicalSiteUrl() {
   // Avoid reflecting Host/X-Forwarded-* headers into XML.
   // Use a configured canonical origin (or production default) instead.
-  return process.env.NEXT_PUBLIC_SITE_URL || 'https://longhollow.com';
+  const raw = process.env.NEXT_PUBLIC_SITE_URL || 'https://longhollow.com';
+  return raw.replace(/\/+$/, '');
 }
 
 function buildSitemapXml({ baseUrl, urls }) {

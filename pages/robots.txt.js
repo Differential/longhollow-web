@@ -1,5 +1,6 @@
 function getCanonicalSiteUrl() {
-  return process.env.NEXT_PUBLIC_SITE_URL || 'https://longhollow.com';
+  const raw = process.env.NEXT_PUBLIC_SITE_URL || 'https://longhollow.com';
+  return raw.replace(/\/+$/, '');
 }
 
 export async function getServerSideProps({ req, res }) {

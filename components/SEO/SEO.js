@@ -18,9 +18,17 @@ function SEO(props = {}) {
   const router = useRouter();
   // Merge defaults so callers can pass partial `meta` without producing
   // undefined meta tags (React defaultProps does not deep-merge objects).
-  const meta = { ...SEO.defaultProps.meta, ...(props.meta || {}) };
+  const metaFromProps = props.meta || {};
+  const meta = { ...SEO.defaultProps.meta, ...metaFromProps };
 
-  const title = getPageTitle(meta.title || props.title);
+  // Preserve existing behavior: if a page passes `title` plus a partial `meta`
+  // object (without a `meta.title`), `title` should still win.
+  const hasMetaTitle = Object.prototype.hasOwnProperty.call(
+    metaFromProps,
+    'title'
+  );
+  const titleInput = (hasMetaTitle ? metaFromProps.title : props.title) || meta.title;
+  const title = getPageTitle(titleInput);
   const url = `https://longhollow.com${router.asPath}`;
 
   useEffect(() => {
@@ -70,8 +78,8 @@ function SEO(props = {}) {
   return (
     <Head>
       <title>{title}</title>
-      <meta property="og:title" content={meta.title} />
-      <meta name="twitter:title" content={meta.title} />
+      <meta property="og:title" content={title} />
+      <meta name="twitter:title" content={title} />
       <meta name="keywords" content={meta.keywords} />
       <meta name="description" content={meta.description} />
       {meta.robots ? (
