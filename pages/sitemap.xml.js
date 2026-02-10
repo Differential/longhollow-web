@@ -1,10 +1,7 @@
-function getBaseUrl(req) {
-  // Prefer forwarded headers on Vercel.
-  const proto = req?.headers?.['x-forwarded-proto'] || 'https';
-  const host =
-    req?.headers?.['x-forwarded-host'] || req?.headers?.host || 'longhollow.com';
-
-  return `${proto}://${host}`;
+function getCanonicalSiteUrl() {
+  // Avoid reflecting Host/X-Forwarded-* headers into XML.
+  // Use a configured canonical origin (or production default) instead.
+  return process.env.NEXT_PUBLIC_SITE_URL || 'https://longhollow.com';
 }
 
 function buildSitemapXml({ baseUrl, urls }) {
@@ -34,7 +31,8 @@ function buildSitemapXml({ baseUrl, urls }) {
 export async function getServerSideProps({ req, res }) {
   // Serve a real sitemap.xml. Without this, requests fall through to `pages/[slug].js`
   // and return HTML (200), which breaks crawler behavior.
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || getBaseUrl(req);
+  void req;
+  const baseUrl = getCanonicalSiteUrl();
 
   // Keep this conservative: core landing pages only. The rest of the site is CMS-driven
   // and would require an explicit "list all slugs" query to be complete.
@@ -60,4 +58,3 @@ export async function getServerSideProps({ req, res }) {
 export default function SitemapXml() {
   return null;
 }
-

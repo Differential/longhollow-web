@@ -1,12 +1,18 @@
-export async function getServerSideProps({ res }) {
+function getCanonicalSiteUrl() {
+  return process.env.NEXT_PUBLIC_SITE_URL || 'https://longhollow.com';
+}
+
+export async function getServerSideProps({ req, res }) {
   // Serve a real robots.txt. Without this, requests fall through to `pages/[slug].js`
   // and return HTML, which crawlers may misinterpret.
+  void req;
+  const baseUrl = getCanonicalSiteUrl();
   const body = [
     'User-agent: *',
     'Disallow: /search',
     'Disallow: /_next/',
     '',
-    'Sitemap: https://longhollow.com/sitemap.xml',
+    `Sitemap: ${baseUrl}/sitemap.xml`,
     '',
   ].join('\n');
 
@@ -20,4 +26,3 @@ export async function getServerSideProps({ res }) {
 export default function RobotsTxt() {
   return null;
 }
-

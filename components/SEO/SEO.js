@@ -16,7 +16,11 @@ function getPageTitle(title) {
 
 function SEO(props = {}) {
   const router = useRouter();
-  const title = getPageTitle(props.meta.title || props.title);
+  // Merge defaults so callers can pass partial `meta` without producing
+  // undefined meta tags (React defaultProps does not deep-merge objects).
+  const meta = { ...SEO.defaultProps.meta, ...(props.meta || {}) };
+
+  const title = getPageTitle(meta.title || props.title);
   const url = `https://longhollow.com${router.asPath}`;
 
   useEffect(() => {
@@ -66,19 +70,19 @@ function SEO(props = {}) {
   return (
     <Head>
       <title>{title}</title>
-      <meta property="og:title" content={props.meta.title} />
-      <meta name="twitter:title" content={props.meta.title} />
-      <meta name="keywords" content={props.meta.keywords} />
-      <meta name="description" content={props.meta.description} />
-      {props.meta.robots ? (
-        <meta name="robots" content={props.meta.robots} />
+      <meta property="og:title" content={meta.title} />
+      <meta name="twitter:title" content={meta.title} />
+      <meta name="keywords" content={meta.keywords} />
+      <meta name="description" content={meta.description} />
+      {meta.robots ? (
+        <meta name="robots" content={meta.robots} />
       ) : null}
-      <meta property="og:description" content={props.meta.description} />
-      <meta name="twitter:description" content={props.meta.description} />
+      <meta property="og:description" content={meta.description} />
+      <meta name="twitter:description" content={meta.description} />
       <meta property="og:url" content={url} />
       <meta name="twitter:url" content={url} />
-      <meta property="og:image" content={props.meta.image} />
-      <meta name="twitter:image" content={props.meta.image} />
+      <meta property="og:image" content={meta.image} />
+      <meta name="twitter:image" content={meta.image} />
       <meta name="twitter:card" content="summary" />
       <meta
         name="viewport"
