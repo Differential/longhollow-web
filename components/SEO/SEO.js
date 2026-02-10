@@ -70,6 +70,9 @@ function SEO(props = {}) {
       <meta name="twitter:title" content={props.meta.title} />
       <meta name="keywords" content={props.meta.keywords} />
       <meta name="description" content={props.meta.description} />
+      {props.meta.robots ? (
+        <meta name="robots" content={props.meta.robots} />
+      ) : null}
       <meta property="og:description" content={props.meta.description} />
       <meta name="twitter:description" content={props.meta.description} />
       <meta property="og:url" content={url} />
@@ -117,6 +120,7 @@ SEO.propTypes = {
     description: PropTypes.string,
     image: PropTypes.string,
     keywords: PropTypes.string,
+    robots: PropTypes.string,
   }),
   title: PropTypes.string,
 };

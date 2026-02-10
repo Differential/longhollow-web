@@ -25,6 +25,9 @@ export default function SearchPage({ dropdownData }) {
   return (
     <Layout
       title="Search"
+      meta={{
+        robots: 'noindex, nofollow',
+      }}
       overflowY={filtering ? { _: 'hidden', lg: 'auto' } : 'auto'}
       height={filtering ? { _: '100vh', lg: '100%' } : '100%'}
       dropdownData={dropdownData}
