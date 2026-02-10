@@ -19,6 +19,11 @@ export async function getServerSideProps({ req, res }) {
   ].join('\n');
 
   res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+  // Cache at the edge; this content is effectively static between deploys.
+  res.setHeader(
+    'Cache-Control',
+    'public, max-age=0, s-maxage=86400, stale-while-revalidate=604800'
+  );
   res.write(body);
   res.end();
 

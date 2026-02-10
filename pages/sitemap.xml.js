@@ -15,15 +15,12 @@ function xmlEscape(value) {
 }
 
 function buildSitemapXml({ baseUrl, urls }) {
-  const now = new Date().toISOString();
-
   const entries = urls
     .map((path) => {
       const loc = `${baseUrl}${path}`;
       return [
         '  <url>',
         `    <loc>${xmlEscape(loc)}</loc>`,
-        `    <lastmod>${now}</lastmod>`,
         '  </url>',
       ].join('\n');
     })
@@ -59,6 +56,8 @@ export async function getServerSideProps({ req, res }) {
   const xml = buildSitemapXml({ baseUrl, urls });
 
   res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+  // Cache at the edge; this content is effectively static between deploys.
+  res.setHeader('Cache-Control', 'public, max-age=0, s-maxage=86400, stale-while-revalidate=604800');
   res.write(xml);
   res.end();
 
