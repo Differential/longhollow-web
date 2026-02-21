@@ -27,7 +27,7 @@
     "cross-fetch": "^3.0.6",
     "date-fns": "^2.21.1",
     "graphql": "^15.4.0",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.23",
     "next": "^14.2.5",
     "nprogress": "^0.2.0",
     "phosphor-react": "^1.1.2",
