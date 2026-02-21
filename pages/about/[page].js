@@ -11,7 +11,6 @@ import { GET_MINISTRY_CONTENT } from 'hooks/useMinistryContent';
 import { GET_UNIVERSAL_CONTENT_ITEM_BY_SLUG } from 'hooks/useUniversalContentItemBySlug';
 import { initializeApollo, safeQuery } from 'lib/apolloClient';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 import { CardGrid, Longform, Section } from 'ui-kit';
 import { getChannelId, getIdSuffix, getMetaData, getSlugFromURL } from 'utils';
 
@@ -22,13 +21,6 @@ export default function Page({
   relatedContent,
 }) {
   const router = useRouter();
-
-  // next.config.js isn't working for redirects when clicking on the link to redirect from
-  useEffect(() => {
-    if (router.query?.page === 'meet-our-staff') {
-      router.replace('/search?category=Staff&p=1');
-    }
-  }, [router]);
 
   if (data.loading || router.isFallback) {
     return null;

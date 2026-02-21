@@ -21,7 +21,7 @@ module.exports = {
       {
         source: '/about/meet-our-staff',
         destination: '/search?category=Staff&p=1',
-        permanent: false,
+        permanent: true,
       },
       {
         source: '/app-link/:slug',
