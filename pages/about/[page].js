@@ -137,15 +137,6 @@ export default function Page({
 }
 
 export async function getStaticProps(context) {
-  if (context.params.page === 'meet-our-staff') {
-    return {
-      redirect: {
-        destination: '/search?category=Staff&p=1',
-        permanent: true,
-      },
-    };
-  }
-
   const apolloClient = initializeApollo();
 
   const pageResponse = await safeQuery(apolloClient, {
