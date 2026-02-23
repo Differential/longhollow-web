@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import { Analytics } from '@vercel/analytics/next';
 
 import configureNProgress from 'config/nprogress';
 import { AppProvider } from 'providers';
@@ -45,6 +46,7 @@ function App({ Component, pageProps = {}, dropdownData }) {
           <Component dropdownData={dropdownData} {...componentProps} />
         )}
       </AppProvider>
+      <Analytics />
     </>
   );
 }
