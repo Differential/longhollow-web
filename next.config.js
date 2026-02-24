@@ -370,7 +370,7 @@ module.exports = {
       { source: '/local', destination: '/search?category=Service%20Opportunities&p=1', permanent: true },
       { source: '/easteroffering', destination: '/', permanent: true },
       { source: '/easteroffering', destination: '/spring-offering-2025', permanent: true },
-      { source: '/easter', destination: 'https://longholloweaster.com', permanent: true },
+      { source: '/easter', destination: '/easter-2026-1', permanent: true },
       { source: '/lhkids', destination: '/connect/kids', permanent: true },
       { source: '/christmas', destination: 'https://longhollowchristmas.com', permanent: true },
       { source: '/christmaseve', destination: '/christmas-eve-at-long-hollow-2025', permanent: true },
