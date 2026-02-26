@@ -4,7 +4,7 @@ import DropdownAbout from 'components/Dropdowns/DropdownAbout';
 export default function About({ dropdownData }) {
   return (
     <Layout title="About" dropdownData={dropdownData}>
-      <DropdownAbout hideShadow {...dropdownData.about} />
+      <DropdownAbout hideShadow {...(dropdownData?.about || {})} />
     </Layout>
   );
 }
