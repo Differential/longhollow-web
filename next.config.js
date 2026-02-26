@@ -11,6 +11,19 @@ module.exports = {
         source: '/.well-known/apple-app-site-association',
         headers: [{ key: 'content-type', value: 'application/json' }],
       },
+      {
+        source: '/search',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=0, s-maxage=600, stale-while-revalidate=86400',
+          },
+          {
+            key: 'X-Robots-Tag',
+            value: 'noindex, nofollow',
+          },
+        ],
+      },
     ];
   },
   async redirects() {

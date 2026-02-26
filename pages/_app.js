@@ -4,16 +4,17 @@ import { Analytics } from '@vercel/analytics/next';
 import configureNProgress from 'config/nprogress';
 import { AppProvider } from 'providers';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
-import { initializeApollo } from 'lib/apolloClient';
-import getDropdownData from 'utils/getDropdownData';
+import { useEffect, useState } from 'react';
 import NotFound from './404';
 
 // Tracks the route changes and adds a bar to the top.
 configureNProgress();
 
-function App({ Component, pageProps = {}, dropdownData }) {
+function App({ Component, pageProps = {} }) {
   const router = useRouter();
+  const [dropdownData, setDropdownData] = useState(
+    pageProps.dropdownData || null
+  );
 
   useEffect(() => {
     function handleRouteChangeComplete() {
@@ -26,6 +27,30 @@ function App({ Component, pageProps = {}, dropdownData }) {
       router.events.off('routeChangeComplete', handleRouteChangeComplete);
     };
   }, [router.events]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    if (dropdownData) return undefined;
+
+    async function loadDropdownData() {
+      try {
+        const response = await fetch('/api/dropdown-data');
+        if (!response.ok) return;
+
+        const data = await response.json();
+        if (!cancelled) setDropdownData(data);
+      } catch {
+        // Use fallback empty dropdown data if the request fails.
+      }
+    }
+
+    loadDropdownData();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [dropdownData]);
 
   const { initialApolloState, ...componentProps } = pageProps;
 
@@ -50,13 +75,5 @@ function App({ Component, pageProps = {}, dropdownData }) {
     </>
   );
 }
-
-App.getInitialProps = async () => {
-  const apolloClient = initializeApollo();
-
-  const dropdownData = await getDropdownData(apolloClient);
-
-  return { dropdownData };
-};
 
 export default App;
