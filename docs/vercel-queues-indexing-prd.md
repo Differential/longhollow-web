@@ -379,7 +379,7 @@ Legend: `Not Started` | `In Progress` | `Done` | `Blocked`
 |---|---|---|
 | Step 1: Create PRD file and baseline decisions | Done | This file created. |
 | Step 2: Define V1 contracts and endpoint specs | Done | Queue payload JSON schemas, endpoint contracts, and auth model defined in Sections 7-8. |
-| Step 3: Implement transitional shared package | Not Started | Extract core mapping/index workflow. |
+| Step 3: Implement transitional shared package | Done | Initial package scaffold created at `packages/search-indexer` with contracts and no-wipe full rebuild orchestration API. |
 | Step 4: Implement web queue handlers and cron | Not Started | Full-only orchestration in web repo. |
 | Step 5: Implement temp-index + atomic swap safety | Not Started | Hard migration gate. |
 | Step 6: Implement one-click undo endpoint | Not Started | Must include dry-run. |
