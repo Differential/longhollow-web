@@ -100,6 +100,106 @@ This requirement directly eliminates the current empty-index failure mode.
 - `attempt`
 - `dedupeKey`
 
+## Queue Callback Endpoint Contract
+- Route: `POST /api/indexing/queue`
+- Runtime: Node.js runtime (not edge)
+- Content-Type: `application/json`
+- Handler style: official `@vercel/queue` callback handler
+- Queue auth: rely on Vercel queue callback verification mechanism from SDK
+- Allowed methods: `POST` only
+- Response codes:
+  - `200`: processed successfully (or duplicate deduped safely)
+  - `400`: invalid payload schema
+  - `401`: failed callback verification
+  - `500`: retriable processing failure
+
+## Queue Message Envelope (V1)
+```json
+{
+  "type": "full.start | full.channel | full.staff | full.finalize",
+  "runId": "2026-03-05T08:15:00.000Z_01HV...",
+  "messageId": "uuid-v4",
+  "attempt": 1,
+  "dedupeKey": "full.start:2026-03-05T08:15:00.000Z_01HV..."
+}
+```
+
+## Payload by Message Type (V1)
+
+### `full.start`
+```json
+{
+  "type": "full.start",
+  "runId": "string",
+  "messageId": "string",
+  "attempt": 1,
+  "dedupeKey": "string",
+  "payload": {
+    "scheduledFor": "2026-03-05T08:15:00.000Z",
+    "triggeredBy": "cron | manual",
+    "timezone": "America/Chicago"
+  }
+}
+```
+
+### `full.channel`
+```json
+{
+  "type": "full.channel",
+  "runId": "string",
+  "messageId": "string",
+  "attempt": 1,
+  "dedupeKey": "string",
+  "payload": {
+    "channelId": 14,
+    "pageSize": 100,
+    "afterCursor": null
+  }
+}
+```
+
+### `full.staff`
+```json
+{
+  "type": "full.staff",
+  "runId": "string",
+  "messageId": "string",
+  "attempt": 1,
+  "dedupeKey": "string",
+  "payload": {
+    "source": "person.getStaff"
+  }
+}
+```
+
+### `full.finalize`
+```json
+{
+  "type": "full.finalize",
+  "runId": "string",
+  "messageId": "string",
+  "attempt": 1,
+  "dedupeKey": "string",
+  "payload": {
+    "expectedShardCount": 13,
+    "tmpIndexName": "prod_ContentItem_tmp_20260305_081500_01HV..."
+  }
+}
+```
+
+## KV State Contract (V1)
+- `indexing:run:<runId>:meta`
+  - `status`: `queued | running | finalize_pending | completed | failed | rolled_back`
+  - `tmpIndexName`
+  - `startedAt`
+  - `completedAt`
+  - `expectedShardCount`
+  - `completedShardCount`
+- `indexing:run:<runId>:dedupe:<dedupeKey>` (TTL key, value `1`)
+- `indexing:run:<runId>:shard:<shardKey>` (value `pending | completed | failed`)
+- `indexing:last_successful_run` (runId)
+- `indexing:rollback:last_event` (JSON metadata)
+
 ## V1 Deliberate Omission
 - `delta.run` is excluded from V1 implementation.
 - Delta can be introduced as a later phase only after V1 stabilization.
@@ -110,6 +210,79 @@ This requirement directly eliminates the current empty-index failure mode.
 - Queue callback route for Vercel Queue processing.
 - Authenticated manual full-index trigger route.
 - Authenticated rollback route for one-click undo.
+
+## Endpoint Specs
+
+### 1) Queue Callback
+- Method/Path: `POST /api/indexing/queue`
+- Auth: Vercel queue callback verification from SDK
+- Request body: queue message envelope (Section 7)
+- Success response:
+```json
+{ "ok": true, "runId": "string", "type": "full.channel", "deduped": false }
+```
+- Duplicate response:
+```json
+{ "ok": true, "runId": "string", "type": "full.channel", "deduped": true }
+```
+
+### 2) Manual Full Trigger
+- Method/Path: `POST /api/indexing/manual-full-index`
+- Auth header: `Authorization: Bearer <INDEX_MANUAL_TRIGGER_TOKEN>`
+- Request body:
+```json
+{ "reason": "optional string for audit log" }
+```
+- Success response:
+```json
+{ "ok": true, "runId": "string", "enqueued": true, "triggeredBy": "manual" }
+```
+- Failure response:
+```json
+{ "ok": false, "error": "unauthorized | invalid_request | enqueue_failed" }
+```
+
+### 3) One-Click Undo (Rollback)
+- Method/Path: `POST /api/indexing/rollback`
+- Auth header: `Authorization: Bearer <INDEX_ROLLBACK_TOKEN>`
+- Request body:
+```json
+{
+  "dry_run": true,
+  "reason": "required free-text reason",
+  "actor": "required identifier/email"
+}
+```
+- Success response:
+```json
+{
+  "ok": true,
+  "dry_run": true,
+  "actions": [
+    "set INDEXING_ORCHESTRATOR=bull",
+    "set INDEXING_WRITE_TARGET=disabled",
+    "restore prior Algolia live target"
+  ]
+}
+```
+- Non-dry-run response:
+```json
+{
+  "ok": true,
+  "dry_run": false,
+  "rolledBack": true,
+  "eventId": "string",
+  "timestamp": "ISO-8601"
+}
+```
+
+## Endpoint Security Requirements
+- All indexing routes must reject non-`POST` methods with `405`.
+- Manual and rollback routes require bearer token auth using constant-time comparison.
+- Log all auth failures with route + source IP + timestamp (no token logging).
+- Rollback route enforces single-flight lock via KV key:
+  - `indexing:rollback:lock` with short TTL.
+- Rollback route requires `reason` and `actor` fields for auditability.
 
 ## One-Click Undo Endpoint (Required)
 - Proposed shape: `POST /api/indexing/rollback`.
@@ -205,7 +378,7 @@ Legend: `Not Started` | `In Progress` | `Done` | `Blocked`
 | Phase | Status | Notes |
 |---|---|---|
 | Step 1: Create PRD file and baseline decisions | Done | This file created. |
-| Step 2: Define V1 contracts and endpoint specs | Not Started | Queue payload JSON schemas and auth details. |
+| Step 2: Define V1 contracts and endpoint specs | Done | Queue payload JSON schemas, endpoint contracts, and auth model defined in Sections 7-8. |
 | Step 3: Implement transitional shared package | Not Started | Extract core mapping/index workflow. |
 | Step 4: Implement web queue handlers and cron | Not Started | Full-only orchestration in web repo. |
 | Step 5: Implement temp-index + atomic swap safety | Not Started | Hard migration gate. |
@@ -216,6 +389,5 @@ Legend: `Not Started` | `In Progress` | `Done` | `Blocked`
 
 ## 14. Open Items
 
-- Final auth mechanism for internal trigger/rollback endpoints (token, header, and source allowlist specifics).
 - Exact parity sample set (which object IDs across categories).
 - Stabilization window duration before legacy decommission.
