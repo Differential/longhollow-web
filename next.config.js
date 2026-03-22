@@ -445,6 +445,6 @@ module.exports = {
       { source: '/groupserve', destination: 'https://my.longhollow.com/groupserve', permanent: true },
       { source: '/vendor', destination: 'https://longhollow.wufoo.com/forms/phu7t8c0lslify/', permanent: true },
       { source: '/notes', destination: 'http://bible.com/events/49577227', permanent: true }
-    ]; { source: '/notes', destination: 'http://bible.com/events/49580535', permanent: true }
+    ];{ source: '/notes', destination: 'http://bible.com/events/49580535', permanent: true }
   },
 };
