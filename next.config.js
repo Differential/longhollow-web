@@ -95,7 +95,7 @@ module.exports = {
       { source: '/merch', destination: 'https://longhollow.store/', permanent: true },
       { source: '/prison', destination: '/incarceration-ministry', permanent: true },
       { source: '/hunger', destination: 'end-hunger-in-sumner', permanent: true },
-      { source: '/springoffering', destination: '/spring-offering-2025', permanent: true },
+      { source: '/springoffering', destination: '/spring-offering-2026', permanent: true },
       { source: '/spring-offering', destination: '/spring-offering-2026', permanent: true },
       { source: '/holidayserve', destination: '/serve-for-the-holidays-2025', permanent: true },
       { source: '/campvolunteer', destination: 'https://my.longhollow.com/campvolunteer', permanent: true },
