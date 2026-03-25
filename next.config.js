@@ -447,5 +447,6 @@ module.exports = {
       { source: '/vendor', destination: 'https://longhollow.wufoo.com/forms/phu7t8c0lslify/', permanent: true },
       { source: '/notes', destination: 'http://bible.com/events/49584096', permanent: true },
       { source: '/missions-partner-connect', destination: 'https://longhollow.com/missions-partner-connect', permanent: true }
-      
+    ];      
+  }
 };
