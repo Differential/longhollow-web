@@ -445,6 +445,7 @@ module.exports = {
       { source: '/vendor', destination: 'https://longhollow.wufoo.com/forms/phu7t8c0lslify/', permanent: true },
       { source: '/notes', destination: 'http://bible.com/events/49587555', permanent: true },
       { source: '/kidscamp', destination: 'https://longhollow.com/kids-camp-2026', permanent: true },
+      { source: '/studentcamp', destination: 'https://longhollow.com/student-camp-2026', permanent: true },
     ];
   }
 };
