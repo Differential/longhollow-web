@@ -446,6 +446,7 @@ module.exports = {
       { source: '/notes', destination: 'http://bible.com/events/49595063', permanent: true },
       { source: '/kidscamp', destination: 'https://longhollow.com/kids-camp-2026', permanent: true },
       { source: '/studentcamp', destination: 'https://longhollow.com/student-camp-2026', permanent: true },
+      { source: '/thegospelofbeinghuman', destination: 'https://www.martysolomon.com', permanent: true },
     ];
   }
 };
