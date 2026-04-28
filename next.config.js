@@ -119,7 +119,7 @@ module.exports = {
       { source: '/embracegrace', destination: 'https://my.longhollow.com/page/2823?GroupId=479136&PageType=care', permanent: true },
       { source: '/hope-through-illness', destination: 'https://my.longhollow.com/page/2823?GroupId=425337&PageType=care', permanent: true },
       { source: '/safe-people', destination: 'https://my.longhollow.com/page/2823?GroupId=1061529&PageType=care', permanent: true },
-      { source: '/womens-infertility-and-miscarriage', destination: 'https://my.longhollow.com/page/2823?GroupId=465379&PageType=care', permanent: true },
+      { source: '/womens-infertility-and-miscarriage', destination: 'https://my.longhollow.com/page/2823?GroupId=1161236&PageType=care', permanent: true },
       { source: '/mensconference', destination: 'https://www.nashmensconference.com/', permanent: true },
       { source: '/womensconference', destination: '/long-hollow-womens-conference-2026', permanent: true },
       { source: '/menvol', destination: 'https://my.longhollow.com/morningofmensevent', permanent: true },
