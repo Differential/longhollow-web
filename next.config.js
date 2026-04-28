@@ -450,6 +450,7 @@ module.exports = {
       { source: '/divorce-care-sunday', destination: 'https://my.longhollow.com/page/2823?GroupId=1161230&PageType=care', permanent: true },
       { source: '/divorce-care-wednesday', destination: 'https://my.longhollow.com/page/2823?GroupId=1143173&PageType=care', permanent: true },
       { source: '/graceformentalhealth', destination: 'https://my.longhollow.com/page/2823?GroupId=1161233&PageType=care', permanent: true },
+      { source: '/healingfromtrauma', destination: 'https://my.longhollow.com/page/2823?GroupId=1161237&PageType=care', permanent: true },
     ];
   }
 };
