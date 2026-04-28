@@ -103,7 +103,7 @@ module.exports = {
       { source: '/parentconference', destination: '/parent-conference-2025', permanent: true },
       { source: '/lafires', destination: '/california-wildfires', permanent: true },
       { source: '/volunteering', destination: '/next-steps/volunteer', permanent: true },
-      { source: '/grief-share', destination: 'https://my.longhollow.com/page/2823?GroupId=1057795&PageType=care', permanent: true },
+      { source: '/grief-share', destination: 'https://my.longhollow.com/page/2823?GroupId=1161551&PageType=care', permanent: true },
       { source: '/impact', destination: 'https://www.longhollowimpact.com/', permanent: true },
       { source: '/2024impact', destination: 'https://www.longhollowimpact.com/', permanent: true },
       { source: '/connect/support-groups', destination: 'https://my.longhollow.com/page/2827', permanent: true },
