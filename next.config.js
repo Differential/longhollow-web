@@ -447,6 +447,7 @@ module.exports = {
       { source: '/kidscamp', destination: 'https://longhollow.com/kids-camp-2026', permanent: true },
       { source: '/studentcamp', destination: 'https://longhollow.com/student-camp-2026', permanent: true },
       { source: '/thegospelofbeinghuman', destination: 'https://www.martysolomon.com', permanent: true },
+      { source: '/divorce-care-sunday', destination: 'https://my.longhollow.com/page/2823?GroupId=1161230&PageType=care', permanent: true },
     ];
   }
 };
