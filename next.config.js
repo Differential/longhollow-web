@@ -452,6 +452,7 @@ module.exports = {
       { source: '/graceformentalhealth', destination: 'https://my.longhollow.com/page/2823?GroupId=1161233&PageType=care', permanent: true },
       { source: '/healingfromtrauma', destination: 'https://my.longhollow.com/page/2823?GroupId=1161237&PageType=care', permanent: true },
       { source: '/teams', destination: 'https://longhollow.com/next-steps/volunteer', permanent: true }, 
+      { source: '/prayerwalk', destination: 'https://longhollow.com/prayer-walk-sumner-county-schools', permanent: true },
     ];
   }
 };
