@@ -78,7 +78,7 @@ module.exports = {
       { source: '/servefinder', destination: 'https://my.longhollow.com/servefinder', permanent: true },
       { source: '/campusnights', destination: '/summer-campus-nights-at-gallatin', permanent: true },
       { source: '/gallatin', destination: '/gallatin-schedule-and-directions', permanent: true },
-      { source: '/equip', destination: 'https://longhollow.com/wednesdays-at-lh-fall-2026', permanent: true },
+      { source: '/equip', destination: 'https://longhollow.com/long-hollow-school-of-ministry', permanent: true },
       { source: '/nov13', destination: 'https://my.longhollow.com/page/3065', permanent: true },
       { source: '/mensnighthendersonville', destination: '/mens-night', permanent: true },
       { source: '/mensnightgallatin', destination: '/gallatin-mens-night', permanent: true },
