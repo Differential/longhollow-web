@@ -455,6 +455,7 @@ module.exports = {
       { source: '/campstream', destination: 'https://youtube.com/@lhstudents?si=nteA3ylRZdvIbRUV', permanent: true },
       { source: '/connectsundays', destination: 'https://longhollow.com/connect-sunday', permanent: true },
       { source: '/womensnight', destination: 'https://longhollow.com/womens-night', permanent: true },
+      { source: '/landing', destination: 'https://longhollow.com/recovery-for-teens', permanent: true }
     ];
   }
 };
