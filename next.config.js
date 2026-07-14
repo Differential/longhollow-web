@@ -454,6 +454,7 @@ module.exports = {
       { source: '/prayerwalk', destination: 'https://longhollow.com/prayer-walk-sumner-county-schools', permanent: true },
       { source: '/campstream', destination: 'https://youtube.com/@lhstudents?si=nteA3ylRZdvIbRUV', permanent: true },
       { source: '/connectsundays', destination: 'https://longhollow.com/connect-sunday', permanent: true },
+      { source: '/womensnight', destination: 'https://longhollow.com/womens-night', permanent: true },
     ];
   }
 };
