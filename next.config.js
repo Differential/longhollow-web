@@ -442,7 +442,7 @@ module.exports = {
       { source: '/events/light-up-the-pike', destination: 'https://lightupthepike.com', permanent: true },
       { source: '/groupserve', destination: 'https://my.longhollow.com/groupserve', permanent: true },
       { source: '/vendor', destination: 'https://longhollow.wufoo.com/forms/phu7t8c0lslify/', permanent: true },
-      { source: '/notes', destination: 'http://bible.com/events/49633795', permanent: true },
+      { source: '/notes', destination: 'http://bible.com/events/49636883', permanent: true },
       { source: '/kidscamp', destination: 'https://longhollow.com/kids-camp-2026', permanent: true },
       { source: '/studentcamp', destination: 'https://longhollow.com/student-camp-2026', permanent: true },
       { source: '/thegospelofbeinghuman', destination: 'https://www.martysolomon.com', permanent: true },
